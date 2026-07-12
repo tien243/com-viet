@@ -111,7 +111,6 @@ footer{text-align:center;color:#b8a99a;font-size:.82rem;padding:30px 0 40px}
 </div>
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('menu')">📖 Thực đơn</button>
-  <button class="tab-btn" onclick="switchTab('nhau')">🍻 Mồi bén</button>
   <button class="tab-btn" onclick="switchTab('suggest')">🍽️ Góp ý món</button>
   <button class="tab-btn" onclick="switchTab('feature')">💡 Đề xuất</button>
 </div>
@@ -566,10 +565,9 @@ goPage=function(n){
 
 // ── Tabs ──
 function switchTab(tab){
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(tab==='menu'&&i===0)||(tab==='nhau'&&i===1)||(tab==='suggest'&&i===2)||(tab==='feature'&&i===3)));
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(tab==='menu'&&i===0)||(tab==='suggest'&&i===1)||(tab==='feature'&&i===2)));
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-  if(tab==='menu'||tab==='nhau'){document.getElementById('tab-menu').classList.add('active');if(tab==='nhau')setFilter('nhau');else setFilter('');}
-  else document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
 }
 
 // ── Submit Forms ──
