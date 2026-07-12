@@ -66,7 +66,11 @@ header p{color:#7f6b5e;font-size:.88rem;margin-top:4px;font-weight:500}
 .no-result{padding:30px 0;text-align:center}
 .no-result .icon{font-size:3rem;margin-bottom:12px}
 .no-result p{color:#7f6b5e;font-size:.95rem;margin-bottom:12px}
-.pagination{display:flex;gap:6px;justify-content:center;align-items:center;margin-top:14px;flex-wrap:wrap}
+.pagination{display:flex;gap:4px;justify-content:center;align-items:center;margin-top:12px;flex-wrap:wrap}
+.pagination .page-btn{padding:3px 10px;border:1px solid #d5c8bd;border-radius:6px;background:#fff;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit;color:#5a4a40;min-width:28px;text-align:center}
+.pagination .page-btn:hover{border-color:#c0392b;color:#c0392b}
+.pagination .page-btn.active{background:#c0392b;border-color:#c0392b;color:#fff}
+.pagination .page-dot{color:#b8a99a;font-size:.75rem;padding:0 2px}
 .suggest-form{display:flex;flex-direction:column;gap:10px}
 .suggest-form label{font-weight:600;font-size:.85rem;color:#2c2420}
 .suggest-form input,.suggest-form select,.suggest-form textarea{width:100%;padding:9px 12px;border:2px solid #d5c8bd;border-radius:10px;font-size:.88rem;font-family:inherit;background:#fff;transition:border-color .2s;outline:none}
@@ -442,12 +446,12 @@ function renderPage(){
 function $pagination(totalPages){
   if(totalPages<=1)return '';
   let b='';
-  if(currentPage>1)b+=`<button class="btn btn-outline btn-sm" onclick="goPage(${currentPage-1})">‹ Trước</button>`;
+  if(currentPage>1)b+=`<button class="page-btn" onclick="goPage(${currentPage-1})">‹</button>`;
   const startP=Math.max(1,currentPage-2),endP=Math.min(totalPages,currentPage+2);
-  if(startP>1)b+=`<button class="btn btn-outline btn-sm" onclick="goPage(1)">1</button>${startP>2?'<span style="color:#7f6b5e;font-size:.8rem">…</span>':''}`;
-  for(let i=startP;i<=endP;i++)b+=`<button class="btn ${i===currentPage?'btn-primary':'btn-outline'} btn-sm" onclick="goPage(${i})">${i}</button>`;
-  if(endP<totalPages)b+=`${endP<totalPages-1?'<span style="color:#7f6b5e;font-size:.8rem">…</span>':''}<button class="btn btn-outline btn-sm" onclick="goPage(${totalPages})">${totalPages}</button>`;
-  if(currentPage<totalPages)b+=`<button class="btn btn-outline btn-sm" onclick="goPage(${currentPage+1})">Sau ›</button>`;
+  if(startP>1)b+=`<button class="page-btn" onclick="goPage(1)">1</button>${startP>2?'<span class="page-dot">…</span>':''}`;
+  for(let i=startP;i<=endP;i++)b+=`<button class="page-btn${i===currentPage?' active':''}" onclick="goPage(${i})">${i}</button>`;
+  if(endP<totalPages)b+=`${endP<totalPages-1?'<span class="page-dot">…</span>':''}<button class="page-btn" onclick="goPage(${totalPages})">${totalPages}</button>`;
+  if(currentPage<totalPages)b+=`<button class="page-btn" onclick="goPage(${currentPage+1})">›</button>`;
   return `<div class="pagination">${b}</div>`;
 }
 function goPage(n){
