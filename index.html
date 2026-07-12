@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cơm.Việt - Thực đơn cho chồng nấu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: #faf7f2;
+      color: #2c2420;
+      min-height: 100vh;
+    }
+
+    /* ── Layout ── */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* ── Header ── */
+    header {
+      text-align: center;
+      padding: 40px 0 24px;
+      position: relative;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: #c0392b;
+      letter-spacing: -1px;
+    }
+    header h1 span { color: #2c2420; }
+    header p {
+      color: #7f6b5e;
+      font-size: 1rem;
+      margin-top: 6px;
+      font-weight: 500;
+    }
+
+    /* ── Stats ── */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 12px 0 28px;
+      flex-wrap: wrap;
+    }
+    .stat-item {
+      background: #fff;
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #5a4a40;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+    .stat-item .num { color: #c0392b; }
+
+    /* ── Hero Action ── */
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 16px 36px;
+      border: none;
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: inherit;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary {
+      background: #c0392b;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(192,57,43,0.3);
+    }
+    .btn-primary:hover { background: #a93226; }
+    .btn-secondary {
+      background: #fff;
+      color: #2c2420;
+      border: 2px solid #d5c8bd;
+    }
+    .btn-secondary:hover { border-color: #c0392b; color: #c0392b; }
+    .btn-outline {
+      background: transparent;
+      color: #7f6b5e;
+      border: 2px solid #d5c8bd;
+      padding: 10px 18px;
+      font-size: 0.88rem;
+      border-radius: 10px;
+    }
+    .btn-outline:hover { border-color: #c0392b; color: #c0392b; }
+
+    /* ── Category Filter ── */
+    .filters {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+    .filter-chip {
+      padding: 8px 20px;
+      border-radius: 30px;
+      border: 2px solid #d5c8bd;
+      background: transparent;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #5a4a40;
+      font-family: inherit;
+    }
+    .filter-chip:hover { border-color: #c0392b; }
+    .filter-chip.active {
+      background: #c0392b;
+      border-color: #c0392b;
+      color: #fff;
+    }
+
+    /* ── Menu Results ── */
+    .results-area {
+      min-height: 200px;
+    }
+
+    .menu-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 28px 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      margin-bottom: 20px;
+    }
+    .menu-card h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #2c2420;
+    }
+    .menu-day-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #c0392b;
+      margin-bottom: 8px;
+    }
+
+    .menu-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .dish-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      padding: 10px 14px;
+      background: #faf7f2;
+      border-radius: 12px;
+      transition: background 0.2s;
+    }
+    .dish-row:hover { background: #f0eae2; }
+    .dish-cat {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 2px 10px;
+      border-radius: 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .cat-man { background: #fee9e7; color: #c0392b; }
+    .cat-canh { background: #e0f2f1; color: #00897b; }
+    .cat-rau { background: #e8f5e9; color: #388e3c; }
+    .dish-name {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #2c2420;
+    }
+    .dish-desc {
+      font-size: 0.82rem;
+      color: #7f6b5e;
+      margin-top: 2px;
+    }
+    .week-day {
+      border-bottom: 1px solid #eee;
+      padding-bottom: 14px;
+      margin-bottom: 14px;
+    }
+    .week-day:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+    /* ── Refresh / Save / Share ── */
+    .menu-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* ── Browse All ── */
+    .browse-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    @media (max-width: 500px) { .browse-grid { grid-template-columns: 1fr; } }
+    .browse-item {
+      padding: 8px 12px;
+      background: #fff;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .browse-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      color: #b8a99a;
+      font-size: 0.82rem;
+      padding: 30px 0 40px;
+    }
+
+    /* ── Smooth animate ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.35s ease-out; }
+
+    /* ── Toaster ── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #2c2420;
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      z-index: 1000;
+    }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- Header -->
+  <header>
+    <h1>🍚 <span>Cơm.</span>Việt</h1>
+    <p>Thực đơn cho chồng — bấm phát nấu ngay</p>
+  </header>
+
+  <!-- Stats -->
+  <div class="stats" id="stats"></div>
+
+  <!-- Hero Buttons -->
+  <div class="hero-actions">
+    <button class="btn btn-primary" onclick="genDay()">🎲 Thực đơn hôm nay</button>
+    <button class="btn btn-secondary" onclick="genWeek()">📅 Thực đơn cả tuần</button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters" id="filters" data-active=""></div>
+
+  <!-- Results -->
+  <div class="results-area" id="results"></div>
+
+  <footer>
+    Cơm.Việt &middot; Dành cho các ông chồng thương vợ &hearts;
+  </footer>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════
+//   DỮ LIỆU MÓN ĂN — 102 món
+// ═══════════════════════════════════════
+
+const dishes = [
+  // ── MÓN MẶN (38 món) ──
+  { id: 1,  name: 'Thịt kho tàu (thịt kho trứng)',     cat: 'man', desc: 'Thịt ba chỉ kho mềm với trứng cút, nước dừa' },
+  { id: 2,  name: 'Thịt kho tiêu',                      cat: 'man', desc: 'Thịt ba chỉ kho tiêu đậm đà, ăn với cơm nóng' },
+  { id: 3,  name: 'Cá kho tộ',                          cat: 'man', desc: 'Cá basa kho nồi đất với nước mắm, tiêu, ớt' },
+  { id: 4,  name: 'Cá diêu hồng chiên sốt cà',          cat: 'man', desc: 'Cá chiên giòn rưới sốt cà chua chua ngọt' },
+  { id: 5,  name: 'Gà kho gừng',                        cat: 'man', desc: 'Đùi gà kho với gừng tươi thơm nồng' },
+  { id: 6,  name: 'Gà luộc',                            cat: 'man', desc: 'Gà luộc chấm muối tiêu chanh — món không thể thiếu' },
+  { id: 7,  name: 'Thịt rang cháy cạnh',                cat: 'man', desc: 'Thịt ba chỉ rang lửa lớn xém cạnh thơm giòn' },
+  { id: 8,  name: 'Sườn xào chua ngọt',                 cat: 'man', desc: 'Sườn non xào chua ngọt kiểu Việt' },
+  { id: 9,  name: 'Tôm rim me',                         cat: 'man', desc: 'Tôm rim nước me chua ngọt, đậm đà' },
+  { id: 10, name: 'Tôm rang thịt',                      cat: 'man', desc: 'Tôm rang thịt băm, nước mắm đường' },
+  { id: 11, name: 'Chả trứng hấp',                      cat: 'man', desc: 'Trứng gà hấp thịt băm, miến, mộc nhĩ' },
+  { id: 12, name: 'Thịt băm xào sả ớt',                 cat: 'man', desc: 'Thịt heo xay xào với sả ớt thơm nức' },
+  { id: 13, name: 'Bò xào rau củ',                      cat: 'man', desc: 'Thịt bò xào cùng cà rốt, su hào, ớt chuông' },
+  { id: 14, name: 'Đậu hũ nhồi thịt sốt cà',            cat: 'man', desc: 'Đậu hũ nhồi thịt chiên vàng, sốt cà chua' },
+  { id: 15, name: 'Đậu hũ chiên sả ớt',                 cat: 'man', desc: 'Đậu hũ chiên giòn rim sả ớt mặn ngọt' },
+  { id: 16, name: 'Trứng chiên thịt băm',               cat: 'man', desc: 'Trứng đánh với thịt băm, chiên vàng' },
+  { id: 17, name: 'Trứng kho tiêu',                     cat: 'man', desc: 'Trứng luộc lột vỏ, kho nước mắm tiêu' },
+  { id: 18, name: 'Cá thu chiên sốt cà',                cat: 'man', desc: 'Cá thu chiên giòn, sốt cà chua đậm đà' },
+  { id: 19, name: 'Cá basa kho lạt',                    cat: 'man', desc: 'Cá basa kho với nước màu, tỏi, ớt — thịt ngọt' },
+  { id: 20, name: 'Mực xào sa tế',                      cat: 'man', desc: 'Mực tươi xào sa tế cay nồng' },
+  { id: 21, name: 'Mực hấp gừng',                       cat: 'man', desc: 'Mực hấp với gừng, sả, chấm muối tiêu chanh' },
+  { id: 22, name: 'Tôm chiên xù',                       cat: 'man', desc: 'Tôm lăn bột chiên xù giòn rụm' },
+  { id: 23, name: 'Chả giò (nem rán)',                  cat: 'man', desc: 'Nem rán nhân thịt băm, miến, rau củ' },
+  { id: 24, name: 'Thịt viên chiên',                    cat: 'man', desc: 'Thịt heo xay nêm tiêu hành, viên chiên vàng' },
+  { id: 25, name: 'Bò lúc lắc',                         cat: 'man', desc: 'Thịt bò xào hành tây, ớt chuông kiểu bò lúc lắc' },
+  { id: 26, name: 'Gà chiên nước mắm',                  cat: 'man', desc: 'Cánh/đùi gà chiên giòn rưới nước mắm tỏi ớt' },
+  { id: 27, name: 'Cá lóc kho tộ',                      cat: 'man', desc: 'Cá lóc kho nồi đất với nước mắm, tiêu, ớt hiểm' },
+  { id: 28, name: 'Tép rang khô',                       cat: 'man', desc: 'Tép rang khô rim đường, mặn ngọt giòn' },
+  { id: 29, name: 'Cá chép sốt chua ngọt',              cat: 'man', desc: 'Cá chép chiên vàng, sốt chua ngọt kiểu Việt' },
+  { id: 30, name: 'Bò xào hành tây',                    cat: 'man', desc: 'Thịt bò thái mỏng xào hành tây, tiêu xanh' },
+  { id: 31, name: 'Thịt heo luộc',                      cat: 'man', desc: 'Thịt ba chỉ/ thủ luộc chấm nước mắm tỏi ớt' },
+  { id: 32, name: 'Đậu phụ sốt nấm',                    cat: 'man', desc: 'Đậu phụ non sốt nấm đông cô thơm ngọt' },
+  { id: 33, name: 'Gà rang muối',                       cat: 'man', desc: 'Gà rang muối giòn rụm, thơm lừng' },
+  { id: 34, name: 'Chả cá thác lác chiên',              cat: 'man', desc: 'Thác lác quết nhuyễn nặn viên chiên vàng' },
+  { id: 35, name: 'Tôm sú hấp bia',                     cat: 'man', desc: 'Tôm sú hấp với bia, gừng — thịt ngọt săn' },
+  { id: 36, name: 'Sườn nướng',                         cat: 'man', desc: 'Sườn non tẩm ướp nướng thơm lửng' },
+  { id: 37, name: 'Thịt ba chỉ quay giòn',              cat: 'man', desc: 'Ba chỉ quay bì giòn, cuốn rau sống' },
+  { id: 38, name: 'Nem cua bể chiên',                   cat: 'man', desc: 'Nem thập cẩm với cua bể, đậm đà hảo hạng' },
+
+  // ── MÓN CANH (32 món) ──
+  { id: 100,name: 'Canh chua cá lóc',                   cat: 'canh', desc: 'Cá lóc nấu chua với me, bạc hà, giá, rau thơm' },
+  { id: 101,name: 'Canh khổ qua nhồi thịt',             cat: 'canh', desc: 'Mướp đắng nhồi thịt băm, hầm xuống nước ngọt' },
+  { id: 102,name: 'Canh rau ngót thịt băm',             cat: 'canh', desc: 'Rau ngót nấu với thịt băm — ngọt mát' },
+  { id: 103,name: 'Canh cải xanh nấu tôm',              cat: 'canh', desc: 'Cải xanh nấu với tôm khô/ tôm tươi' },
+  { id: 104,name: 'Canh bí đỏ thịt băm',                cat: 'canh', desc: 'Bí đỏ nấu thịt băm, ngọt bùi' },
+  { id: 105,name: 'Canh bầu nấu tôm',                   cat: 'canh', desc: 'Bầu xanh nấu tôm, thanh mát ngày hè' },
+  { id: 106,name: 'Canh mướp nấu tôm',                  cat: 'canh', desc: 'Mướp hương nấu tôm, ngọt và thơm' },
+  { id: 107,name: 'Canh chua tôm',                      cat: 'canh', desc: 'Tôm nấu chua với me, thơm, giá' },
+  { id: 108,name: 'Canh khoai mỡ',                      cat: 'canh', desc: 'Khoai mỡ tím nấu sền sệt, ăn với cơm rất ngon' },
+  { id: 109,name: 'Canh gà lá giang',                   cat: 'canh', desc: 'Gà nấu với lá giang chua thanh đặc sản miền Nam' },
+  { id: 110,name: 'Canh riêu cua',                      cat: 'canh', desc: 'Cua đồng tách gạch, nấu riêu với cà chua' },
+  { id: 111,name: 'Canh bóng thả',                      cat: 'canh', desc: 'Bóng bì lợn nấu với giò sống, tôm, rau củ' },
+  { id: 112,name: 'Canh hến nấu chua',                  cat: 'canh', desc: 'Hến nấu chua với cà chua, khế, rau răm' },
+  { id: 113,name: 'Canh măng tươi',                     cat: 'canh', desc: 'Măng tươi nấu sườn/ tôm, ngọt giòn' },
+  { id: 114,name: 'Canh đậu hũ cà chua',                cat: 'canh', desc: 'Đậu hũ non nấu cà chua chua ngọt' },
+  { id: 115,name: 'Canh rau mồng tơi',                  cat: 'canh', desc: 'Rau mồng tơi nấu tôm — mát bổ ngày hè' },
+  { id: 116,name: 'Canh cá rô đồng',                    cat: 'canh', desc: 'Cá rô đồng nấu chua/ nấu ngót' },
+  { id: 117,name: 'Canh cua rau đay',                   cat: 'canh', desc: 'Cua đồng nấu với mồng tơi, rau đay, mướp' },
+  { id: 118,name: 'Canh khoai môn',                     cat: 'canh', desc: 'Khoai môn nấu sườn non, ngọt bùi thơm' },
+  { id: 119,name: 'Canh đu đủ non hầm xương',           cat: 'canh', desc: 'Đu đủ non hầm xương ống ngọt thanh' },
+  { id: 120,name: 'Canh giá đỗ',                        cat: 'canh', desc: 'Giá đỗ nấu tôm/ thịt băm, nhanh và mát' },
+  { id: 121,name: 'Canh rau dền thịt băm',              cat: 'canh', desc: 'Rau dền đỏ/ dền xanh nấu thịt băm' },
+  { id: 122,name: 'Canh sấu nấu cá',                    cat: 'canh', desc: 'Cá nấu sấu chua thanh, giải nhiệt mùa hè' },
+  { id: 123,name: 'Canh rong biển',                     cat: 'canh', desc: 'Rong biển nấu tôm khô, nhanh và bổ dưỡng' },
+  { id: 124,name: 'Canh chua me đất',                   cat: 'canh', desc: 'Me đất nấu tôm, chua dịu, dân dã' },
+  { id: 125,name: 'Canh củ dền nấu xương',              cat: 'canh', desc: 'Củ dền hầm xương, ngọt và đẹp mắt' },
+  { id: 126,name: 'Canh ngao nấu chua',                 cat: 'canh', desc: 'Ngao nấu chua với cà chua, thì là' },
+  { id: 127,name: 'Canh tôm khoai tây cà rốt',          cat: 'canh', desc: 'Tôm khô nấu với khoai tây, cà rốt hầm' },
+  { id: 128,name: 'Canh mọc (giò sống)',                cat: 'canh', desc: 'Giò sống nấu với nấm hương, rau thơm' },
+  { id: 129,name: 'Canh chay rau củ',                   cat: 'canh', desc: 'Rau củ thập cẩm nấu chay thanh tịnh' },
+  { id: 130,name: 'Canh atiso hầm xương',               cat: 'canh', desc: 'Atiso hầm xương — ngọt mát, bổ dưỡng' },
+  { id: 131,name: 'Canh nấm rơm nấu chua',              cat: 'canh', desc: 'Nấm rơm nấu chua với cà chua, thơm ngọt' },
+
+  // ── MÓN RAU (33 món) ──
+  { id: 200,name: 'Rau muống luộc',                     cat: 'rau', desc: 'Rau muống luộc vớt ra chấm nước mắm tỏi ớt' },
+  { id: 201,name: 'Rau muống xào tỏi',                  cat: 'rau', desc: 'Rau muống xào tỏi lửa lớn, giòn ngon' },
+  { id: 202,name: 'Cải ngọt luộc',                      cat: 'rau', desc: 'Cải ngọt luộc chấm kho quẹt/ nước mắm' },
+  { id: 203,name: 'Cải thìa xào tỏi',                   cat: 'rau', desc: 'Cải thìa xào tỏi thơm, giòn ngọt' },
+  { id: 204,name: 'Rau bí xào tỏi',                     cat: 'rau', desc: 'Rau bí non xào tỏi, giòn mát' },
+  { id: 205,name: 'Rau lang luộc',                      cat: 'rau', desc: 'Rau lang luộc chấm tương/ nước mắm' },
+  { id: 206,name: 'Rau dền luộc',                       cat: 'rau', desc: 'Rau dền luộc chấm vừng muối' },
+  { id: 207,name: 'Bông cải xào tỏi',                   cat: 'rau', desc: 'Bông cải xanh/ trắng xào tỏi' },
+  { id: 208,name: 'Bông cải luộc',                      cat: 'rau', desc: 'Bông cải luộc chấm sốt mayo/ nước mắm' },
+  { id: 209,name: 'Su su xào tỏi',                      cat: 'rau', desc: 'Su su thái sợi, xào tỏi giòn ngọt' },
+  { id: 210,name: 'Bắp cải xào thịt băm',               cat: 'rau', desc: 'Bắp cải xào với thịt băm, nước tương' },
+  { id: 211,name: 'Giá đỗ xào',                         cat: 'rau', desc: 'Giá đỗ xào ớt, hành lá, dùng để ăn kèm' },
+  { id: 212,name: 'Đậu que xào thịt băm',               cat: 'rau', desc: 'Đậu que thái xéo xào thịt băm' },
+  { id: 213,name: 'Đậu bắp luộc',                       cat: 'rau', desc: 'Đậu bắp luộc chấm muối tiêu/ mắm tỏi' },
+  { id: 214,name: 'Mướp xào tỏi',                       cat: 'rau', desc: 'Mướp hương xào tỏi, mềm ngọt' },
+  { id: 215,name: 'Bầu xào tôm',                        cat: 'rau', desc: 'Bầu non xào tôm khô thơm bùi' },
+  { id: 216,name: 'Khổ qua xào trứng',                  cat: 'rau', desc: 'Mướp đắng xào trứng, đắng nhẹ dễ ăn' },
+  { id: 217,name: 'Nộm đu đủ',                          cat: 'rau', desc: 'Đu đủ bào sợi trộn tai heo/ khô bò' },
+  { id: 218,name: 'Nộm rau muống',                      cat: 'rau', desc: 'Rau muống chần trộn lạc, chua ngọt' },
+  { id: 219,name: 'Nộm hoa chuối',                      cat: 'rau', desc: 'Hoa chuối bào mỏng, trộn tôm/ thịt, lạc' },
+  { id: 220,name: 'Dưa leo trộn tỏi ớt',                cat: 'rau', desc: 'Dưa leo đập dập trộn tỏi ớt, mắm chua' },
+  { id: 221,name: 'Cà chua xào trứng',                  cat: 'rau', desc: 'Cà chua xào trứng lăn tăn — món rau miền Nam' },
+  { id: 222,name: 'Đậu phụ chiên',                      cat: 'rau', desc: 'Đậu phụ chiên vàng, chấm nước mắm chua ngọt' },
+  { id: 223,name: 'Đậu cove xào thịt',                  cat: 'rau', desc: 'Đậu cove tươi xào thịt băm' },
+  { id: 224,name: 'Cà tím nướng mỡ hành',               cat: 'rau', desc: 'Cà tím nướng rưới mỡ hành, chấm mắm tỏi' },
+  { id: 225,name: 'Cà pháo muối chua',                  cat: 'rau', desc: 'Cà pháo muối chua ăn kèm thịt luộc' },
+  { id: 226,name: 'Dưa cải chua',                       cat: 'rau', desc: 'Cải bẹ muối chua, ăn kèm món kho' },
+  { id: 227,name: 'Rau cần xào tỏi',                    cat: 'rau', desc: 'Rau cần tây/ cần ta xào tỏi thơm' },
+  { id: 228,name: 'Cải bẹ xanh luộc',                   cat: 'rau', desc: 'Cải bẹ xanh luộc chấm kho tép/ nước mắm' },
+  { id: 229,name: 'Cải thảo xào nấm',                   cat: 'rau', desc: 'Cải thảo xào với nấm hương, chay/ mặn' },
+  { id: 230,name: 'Nộm cà rốt su hào',                  cat: 'rau', desc: 'Cà rốt su hào bào sợi trộn chua ngọt' },
+  { id: 231,name: 'Măng tươi luộc',                     cat: 'rau', desc: 'Măng tươi luộc chấm mắm nêm' },
+  { id: 232,name: 'Rau tần ô luộc',                     cat: 'rau', desc: 'Cải cúc luộc chấm nước mắm gừng' },
+];
+
+// ═══════════════════════════════════════
+//   TIỆN ÍCH
+// ═══════════════════════════════════════
+
+const catLabel = { man: 'Món mặn', canh: 'Món canh', rau: 'Món rau' };
+const catClass = { man: 'cat-man', canh: 'cat-canh', rau: 'cat-rau' };
+const catDot  = { man: '#c0392b', canh: '#00897b', rau: '#388e3c' };
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function pick(arr, n) {
+  const shuffled = shuffle(arr);
+  return shuffled.slice(0, Math.min(n, shuffled.length));
+}
+
+function formatDate(daysFromNow = 0) {
+  const d = new Date();
+  d.setDate(d.getDate() + daysFromNow);
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const days = ['CN','T2','T3','T4','T5','T6','T7'];
+  return `${days[d.getDay()]}, ${dd}/${mm}`;
+}
+
+// ═══════════════════════════════════════
+//   RENDER — Dùng cho cả ngày & tuần
+// ═══════════════════════════════════════
+
+function renderMenu(title, daysArray, isWeek = false) {
+  const el = document.getElementById('results');
+  if (!daysArray.length) {
+    el.innerHTML = `<div class="menu-card fade-up"><p style="color:#7f6b5e">Chưa có món ăn nào được chọn.</p></div>`;
+    return;
+  }
+
+  const dayHTML = daysArray.map((day, idx) => {
+    const items = day.dishes.map(d => `
+      <div class="dish-row">
+        <span class="dish-cat ${catClass[d.cat]}">${catLabel[d.cat]}</span>
+        <div>
+          <div class="dish-name">${d.name}</div>
+          <div class="dish-desc">${d.desc}</div>
+        </div>
+      </div>
+    `).join('');
+
+    const menuNote = day.dishes.length < 3
+      ? `<div style="margin-top:8px;font-size:0.82rem;color:#b8a99a;font-style:italic">
+           ✳️ Nếu thiếu món, bạn có thể bổ sung thêm theo sở thích
+         </div>`
+      : '';
+
+    return `
+      <div class="${isWeek ? 'week-day' : ''}">
+        ${isWeek ? `<div class="menu-day-title">📅 ${day.label}</div>` : ''}
+        <div class="menu-grid">${items}</div>
+        ${menuNote}
+
+      </div>
+    `;
+  }).join('');
+
+  // Gen lại cho nhanh
+  const refreshBtns = isWeek
+    ? `<button class="btn btn-outline" onclick="genWeek()">🔄 Lại tuần khác</button>`
+    : `<button class="btn btn-outline" onclick="genDay()">🔄 Lại món khác</button>`;
+
+  el.innerHTML = `
+    <div class="menu-card fade-up">
+      <h2>${title}</h2>
+      ${dayHTML}
+      <div class="menu-actions">
+        ${refreshBtns}
+        <button class="btn btn-outline" onclick="copyMenu()">📋 Copy thực đơn</button>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════
+//   TẠO THỰC ĐƠN
+// ═══════════════════════════════════════
+
+function genDay() {
+  const oneOfEach = [
+    pick(dishes.filter(d => d.cat === 'man'), 1)[0],
+    pick(dishes.filter(d => d.cat === 'canh'), 1)[0],
+    pick(dishes.filter(d => d.cat === 'rau'), 1)[0],
+  ].filter(Boolean);
+
+  renderMenu('🍽️ Thực đơn hôm nay', [{ label: formatDate(), dishes: oneOfEach }], false);
+}
+
+function genWeek() {
+  const days = [];
+  for (let i = 0; i < 7; i++) {
+    const manPick = pick(dishes.filter(d => d.cat === 'man'), 1)[0];
+    const canhPick = pick(dishes.filter(d => d.cat === 'canh'), 1)[0];
+    const rauPick = pick(dishes.filter(d => d.cat === 'rau'), 1)[0];
+    days.push({
+      label: formatDate(i),
+      dishes: [manPick, canhPick, rauPick].filter(Boolean)
+    });
+  }
+  renderMenu('📅 Thực đơn cả tuần', days, true);
+}
+
+// ═══════════════════════════════════════
+//   COPY MENU
+// ═══════════════════════════════════════
+
+function copyMenu() {
+  const el = document.getElementById('results');
+  const text = el.innerText.trim();
+  if (!text) return;
+
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('📋 Đã copy thực đơn!');
+  }).catch(() => {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('📋 Đã copy thực đơn!');
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._hide);
+  t._hide = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ═══════════════════════════════════════
+//   BROWSE ALL
+// ═══════════════════════════════════════
+
+function showAll(filter) {
+  const filtered = filter
+    ? dishes.filter(d => d.cat === filter)
+    : dishes;
+  const html = filtered.map(d => `
+    <div class="browse-item">
+      <span class="browse-dot" style="background:${catDot[d.cat]}"></span>
+      <span>${d.name}</span>
+    </div>
+  `).join('');
+  const el = document.getElementById('results');
+  el.innerHTML = `
+    <div class="menu-card fade-up">
+      <h2>📖 Tất cả món ăn ${filter ? '(' + catLabel[filter] + ')' : ''}</h2>
+      <p style="font-size:0.85rem;color:#7f6b5e;margin-bottom:12px">${filtered.length} món</p>
+      <div class="browse-grid">${html}</div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════
+//   STATS & FILTERS
+// ═══════════════════════════════════════
+
+function initUI() {
+  // Stats
+  const counts = { man: 0, canh: 0, rau: 0 };
+  dishes.forEach(d => counts[d.cat]++);
+  document.getElementById('stats').innerHTML = `
+    <span class="stat-item">🍖 Món mặn <span class="num">${counts.man}</span></span>
+    <span class="stat-item">🥣 Món canh <span class="num">${counts.canh}</span></span>
+    <span class="stat-item">🥬 Món rau <span class="num">${counts.rau}</span></span>
+  `;
+
+  // Filters
+  const filters = [
+    { key: '', label: 'Tất cả' },
+    { key: 'man', label: '🍖 Món mặn' },
+    { key: 'canh', label: '🥣 Món canh' },
+    { key: 'rau', label: '🥬 Món rau' },
+  ];
+  document.getElementById('filters').innerHTML = filters.map(f =>
+    `<button class="filter-chip${f.key === '' ? ' active' : ''}"
+       data-key="${f.key}"
+       onclick="setFilter('${f.key}')">${f.label}</button>`
+  ).join('');
+}
+
+let currentFilter = '';
+
+function setFilter(key) {
+  currentFilter = key;
+  document.querySelectorAll('.filter-chip').forEach(el => {
+    el.classList.toggle('active', el.dataset.key === key);
+  });
+  showAll(key || null);
+}
+
+// Init
+initUI();
+showAll();
+</script>
+
+</body>
+</html>
