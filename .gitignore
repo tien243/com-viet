@@ -1,1 +1,6 @@
-.vercel
+node_modules
+screenshot.js
+token_temp.js
+facebook-*.png
+package.json
+package-lock.json
