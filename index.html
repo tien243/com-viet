@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cơm.Việt - Thực đơn cho chồng nấu</title>
+  <title>Cơm Bố Nấu - Thực đơn cho bố vào bếp</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
@@ -27,16 +27,31 @@
     /* ── Header ── */
     header {
       text-align: center;
-      padding: 40px 0 24px;
+      padding: 32px 0 20px;
       position: relative;
     }
-    header h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: #c0392b;
-      letter-spacing: -1px;
+    .avatar-wrap {
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: center;
     }
-    header h1 span { color: #2c2420; }
+    .avatar-wrap svg {
+      width: 88px;
+      height: 88px;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.10));
+    }
+    header h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: #2c2420;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    header h1 .tag-red { color: #c0392b; }
     header p {
       color: #7f6b5e;
       font-size: 1rem;
@@ -275,8 +290,33 @@
 
   <!-- Header -->
   <header>
-    <h1>🍚 <span>Cơm.</span>Việt</h1>
-    <p>Thực đơn cho chồng — bấm phát nấu ngay</p>
+    <div class="avatar-wrap">
+      <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- body/shirt -->
+        <rect x="30" y="80" width="60" height="40" rx="8" fill="#4A90D9"/>
+        <!-- head -->
+        <circle cx="60" cy="48" r="34" fill="#F5D0B0"/>
+        <!-- hair -->
+        <path d="M26 42C26 24 38 16 60 16s34 8 34 26-6 12-6-4c0-16-12-20-28-20S26 22 26 42z" fill="#3D2B1F"/>
+        <!-- eyes -->
+        <ellipse cx="48" cy="48" rx="5" ry="6" fill="#fff"/>
+        <ellipse cx="72" cy="48" rx="5" ry="6" fill="#fff"/>
+        <circle cx="48" cy="48" r="3" fill="#2c2420"/>
+        <circle cx="72" cy="48" r="3" fill="#2c2420"/>
+        <!-- glasses frames -->
+        <rect x="38" y="41" width="22" height="16" rx="4" stroke="#3D2B1F" stroke-width="2.5" fill="none"/>
+        <rect x="60" y="41" width="22" height="16" rx="4" stroke="#3D2B1F" stroke-width="2.5" fill="none"/>
+        <line x1="60" y1="48" x2="60" y2="48" stroke="#3D2B1F" stroke-width="2.5"/>
+        <line x1="35" y1="48" x2="38" y2="48" stroke="#3D2B1F" stroke-width="2.5"/>
+        <line x1="82" y1="48" x2="85" y2="48" stroke="#3D2B1F" stroke-width="2.5"/>
+        <!-- smile -->
+        <path d="M50 58C54 64 66 64 70 58" stroke="#2c2420" stroke-width="2" stroke-linecap="round" fill="none"/>
+        <!-- apron -->
+        <path d="M45 84L48 90l12 2 12-2 3-6z" fill="#c0392b" opacity="0.7"/>
+      </svg>
+    </div>
+    <h1><span class="tag-red">Cơm</span> Bố Nấu</h1>
+    <p>Thực đơn cho bố — bấm phát vào bếp liền</p>
   </header>
 
   <!-- Stats -->
@@ -295,7 +335,7 @@
   <div class="results-area" id="results"></div>
 
   <footer>
-    Cơm.Việt &middot; Dành cho các ông chồng thương vợ &hearts;
+    Cơm Bố Nấu &middot; Dành cho các bố thương vợ &hearts;
   </footer>
 </div>
 
