@@ -54,6 +54,7 @@ header p{color:#7f6b5e;font-size:.88rem;margin-top:4px;font-weight:500}
 .cat-man{background:#fee9e7;color:#c0392b}
 .cat-canh{background:#e0f2f1;color:#00897b}
 .cat-rau{background:#e8f5e9;color:#388e3c}
+.cat-nhau{background:#fef3e0;color:#e67e22}
 .dish-name{font-size:1rem;font-weight:600;color:#2c2420}
 .dish-desc{font-size:.82rem;color:#7f6b5e;margin-top:2px}
 .week-day{border-bottom:1px solid #eee;padding-bottom:14px;margin-bottom:14px}
@@ -101,6 +102,7 @@ footer{text-align:center;color:#b8a99a;font-size:.82rem;padding:30px 0 40px}
 </div>
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('menu')">📖 Thực đơn</button>
+  <button class="tab-btn" onclick="switchTab('nhau')">🍻 Mồi bén</button>
   <button class="tab-btn" onclick="switchTab('suggest')">🍽️ Góp ý món</button>
   <button class="tab-btn" onclick="switchTab('feature')">💡 Đề xuất</button>
 </div>
@@ -391,12 +393,63 @@ const dishes = [
 {id:284,name:'Khổ qua muối chua',cat:'rau',desc:'Khổ qua muối chua ăn kèm thịt kho'},
 {id:285,name:'Củ kiệu muối',cat:'rau',desc:'Củ kiệu muối chua ngọt ngày Tết'},
 {id:286,name:'Hành muối',cat:'rau',desc:'Hành củ muối chua'},
+{id:300,name:'Lạc rang tỏi ớt',cat:'nhau',desc:'Lạc rang thơm với tỏi ớt, mồi bia số 1'},
+{id:301,name:'Lạc rang muối',cat:'nhau',desc:'Lạc rang muối giòn tan'},
+{id:302,name:'Đậu phụ chiên mắm tôm',cat:'nhau',desc:'Đậu phụ chiên nóng chấm mắm tôm pha chanh ớt'},
+{id:303,name:'Chân gà sả tắc',cat:'nhau',desc:'Chân gà luộc trộn sả tắc, ớt'},
+{id:304,name:'Chân gà ngâm sả ớt',cat:'nhau',desc:'Chân gà ngâm giòn sả ớt chua cay'},
+{id:305,name:'Mực khô xào sa tế',cat:'nhau',desc:'Mực khô xào sa tế cay nồng'},
+{id:306,name:'Bò khô lá chanh',cat:'nhau',desc:'Bò khô xé tay trộn lá chanh'},
+{id:307,name:'Khô gà lá chanh',cat:'nhau',desc:'Gà khô xé sợi trộn lá chanh'},
+{id:308,name:'Tai heo ngâm sả ớt',cat:'nhau',desc:'Tai heo luộc ngâm sả ớt chua cay'},
+{id:309,name:'Tai heo xào chua ngọt',cat:'nhau',desc:'Tai heo xào chua ngọt đưa bia'},
+{id:310,name:'Da heo chiên giòn',cat:'nhau',desc:'Da heo chiên giòn rụm'},
+{id:311,name:'Nem chua',cat:'nhau',desc:'Nem chua miền Bắc, ăn với lá đinh lăng'},
+{id:312,name:'Bò bóp thấu',cat:'nhau',desc:'Thịt bò trộn hành tây rau răm'},
+{id:313,name:'Ốc bươu xào dừa',cat:'nhau',desc:'Ốc bươu xào nước cốt dừa'},
+{id:314,name:'Ốc xào bơ tỏi',cat:'nhau',desc:'Ốc xào bơ tỏi thơm nức'},
+{id:315,name:'Cá lóc nướng trui',cat:'nhau',desc:'Cá lóc nướng rơm chấm mắm gừng'},
+{id:316,name:'Cá nục nướng',cat:'nhau',desc:'Cá nục nướng chấm muối ớt'},
+{id:317,name:'Cá khô rim me',cat:'nhau',desc:'Cá khô rim me chua ngọt'},
+{id:318,name:'Khô cá lóc rim',cat:'nhau',desc:'Cá lóc khô rim mặn ngọt'},
+{id:319,name:'Khô cá dứa rim',cat:'nhau',desc:'Cá dứa khô rim đường'},
+{id:320,name:'Cá cơm rim me',cat:'nhau',desc:'Cá cơm rim me giòn tan, nhậu lai rai'},
+{id:321,name:'Cá kèo kho tiêu',cat:'nhau',desc:'Cá kèo kho tiêu đậm đà'},
+{id:322,name:'Trứng cút lộn xào me',cat:'nhau',desc:'Trứng cút lộn xào me chua ngọt'},
+{id:323,name:'Trứng vịt lộn xào me',cat:'nhau',desc:'Trứng vịt lộn xào me'},
+{id:324,name:'Bò cuốn lá lốt',cat:'nhau',desc:'Bò nướng cuốn lá lốt thơm lừng'},
+{id:325,name:'Sụn gà chiên mắm',cat:'nhau',desc:'Sụn gà chiên giòn rưới mắm tỏi'},
+{id:326,name:'Phao câu gà chiên mắm',cat:'nhau',desc:'Phao câu gà chiên nước mắm'},
+{id:327,name:'Chả ram tôm đất',cat:'nhau',desc:'Chả ram tôm đất chiên giòn rụm'},
+{id:328,name:'Đậu hũ ky chiên giòn',cat:'nhau',desc:'Đậu hũ ky chiên giòn chấm tương ớt'},
+{id:329,name:'Khoai tây chiên mắm',cat:'nhau',desc:'Khoai tây chiên rắc muối ớt'},
+{id:330,name:'Cá chỉ vàng rim',cat:'nhau',desc:'Cá chỉ vàng rim me/mặn ngọt'},
+{id:331,name:'Tép rang lá chanh',cat:'nhau',desc:'Tép rang khô rim lá chanh'},
+{id:332,name:'Giò lụa chiên',cat:'nhau',desc:'Giò lụa cắt lát chiên vàng'},
+{id:333,name:'Chả quế',cat:'nhau',desc:'Chả quế thái lát chấm tương'},
+{id:334,name:'Bì cuốn thính',cat:'nhau',desc:'Bì cuốn với thính gạo rang'},
+{id:335,name:'Gà bóp rau răm',cat:'nhau',desc:'Gà luộc xé bóp rau răm, hành tây'},
+{id:336,name:'Vịt bóp mắm gừng',cat:'nhau',desc:'Vịt luộc xé bóp mắm gừng'},
+{id:337,name:'Bắp xào tép khô',cat:'nhau',desc:'Bắp xào tép khô, hành phi'},
+{id:338,name:'Nghêu hấp sả',cat:'nhau',desc:'Nghêu hấp sả, chấm muối tiêu chanh'},
+{id:339,name:'Sò huyết xào me',cat:'nhau',desc:'Sò huyết xào me chua ngọt'},
+{id:340,name:'Ốc hấp gừng',cat:'nhau',desc:'Ốc hấp gừng sả'},
+{id:341,name:'Cá trứng kho tiêu',cat:'nhau',desc:'Cá trứng kho tiêu mềm béo'},
+{id:342,name:'Chả chiên hoa',cat:'nhau',desc:'Chả thịt chiên hình hoa đẹp mắt'},
+{id:343,name:'Bò viên chiên',cat:'nhau',desc:'Bò viên chiên chấm tương ớt'},
+{id:344,name:'Cá sardin rim cà',cat:'nhau',desc:'Cá hộp sardin rim cà chua'},
+{id:345,name:'Ruốc bông',cat:'nhau',desc:'Ruốc thịt heo xé tơi'},
+{id:346,name:'Xúc xích chiên',cat:'nhau',desc:'Xúc xích cắt lát chiên chấm tương ớt'},
+{id:347,name:'Cá khô sặc rim',cat:'nhau',desc:'Cá sặc khô rim me tỏi ớt'},
+{id:348,name:'Cháo hành giải rượu',cat:'nhau',desc:'Cháo hành hẹ nóng hổi'},
+{id:349,name:'Nui xào bò',cat:'nhau',desc:'Nui xào thịt bò, rau củ'},
+{id:350,name:'Mì gói xào bò',cat:'nhau',desc:'Mì gói xào thịt bò, rau củ'},
 ];
 
 const PAGE_SIZE=25;
-const catLabel={man:'Món mặn',canh:'Món canh',rau:'Món rau',khac:'Món khác'};
-const catClass={man:'cat-man',canh:'cat-canh',rau:'cat-rau',khac:'cat-man'};
-const catDot={man:'#c0392b',canh:'#00897b',rau:'#388e3c',khac:'#c0392b'};
+const catLabel={man:'Món mặn',canh:'Món canh',rau:'Món rau',nhau:'Mồi bén',khac:'Món khác'};
+const catClass={man:'cat-man',canh:'cat-canh',rau:'cat-rau',nhau:'cat-nhau',khac:'cat-man'};
+const catDot={man:'#c0392b',canh:'#00897b',rau:'#388e3c',nhau:'#e67e22',khac:'#c0392b'};
 
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
 function pick(a,n){const s=shuffle(a);return s.slice(0,Math.min(n,s.length))}
@@ -504,10 +557,10 @@ goPage=function(n){
 
 // ── Tabs ──
 function switchTab(tab){
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(tab==='menu'&&i===0)||(tab==='suggest'&&i===1)||(tab==='feature'&&i===2)));
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(tab==='menu'&&i===0)||(tab==='nhau'&&i===1)||(tab==='suggest'&&i===2)||(tab==='feature'&&i===3)));
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-  document.getElementById('tab-'+tab).classList.add('active');
-  if(tab==='menu'){searchQuery='';searchDishes(document.getElementById('searchInput').value)}
+  if(tab==='menu'||tab==='nhau'){document.getElementById('tab-menu').classList.add('active');if(tab==='nhau')setFilter('nhau');else setFilter('');}
+  else document.getElementById('tab-'+tab).classList.add('active');
 }
 
 // ── Submit Forms ──
@@ -544,9 +597,9 @@ function resetForm(tabId){location.reload()}
 
 // ── Stats & Filters ──
 function initUI(){
-  const counts={man:0,canh:0,rau:0};dishes.forEach(d=>{if(d.cat==='man'||d.cat==='canh'||d.cat==='rau')counts[d.cat]++});
-  document.getElementById('stats').innerHTML=`<span class="stat-item">🍖 Món mặn <span class="num">${counts.man}</span></span><span class="stat-item">🥣 Món canh <span class="num">${counts.canh}</span></span><span class="stat-item">🥬 Món rau <span class="num">${counts.rau}</span></span>`;
-  document.getElementById('filters').innerHTML=[{key:'',label:'Tất cả'},{key:'man',label:'🍖 Món mặn'},{key:'canh',label:'🥣 Món canh'},{key:'rau',label:'🥬 Món rau'}].map(f=>`<button class="filter-chip${f.key===''?' active':''}" data-key="${f.key}" onclick="setFilter('${f.key}')">${f.label}</button>`).join('');
+  const counts={man:0,canh:0,rau:0,nhau:0};dishes.forEach(d=>{if(d.cat==='man'||d.cat==='canh'||d.cat==='rau'||d.cat==='nhau')counts[d.cat]++});
+  document.getElementById('stats').innerHTML=`<span class="stat-item">🍖 Món mặn <span class="num">${counts.man}</span></span><span class="stat-item">🥣 Món canh <span class="num">${counts.canh}</span></span><span class="stat-item">🥬 Món rau <span class="num">${counts.rau}</span></span><span class="stat-item">🍻 Mồi bén <span class="num">${counts.nhau}</span></span>`;
+  document.getElementById('filters').innerHTML=[{key:'',label:'Tất cả'},{key:'man',label:'🍖 Món mặn'},{key:'canh',label:'🥣 Món canh'},{key:'rau',label:'🥬 Món rau'},{key:'nhau',label:'🍻 Mồi bén'}].map(f=>`<button class="filter-chip${f.key===''?' active':''}" data-key="${f.key}" onclick="setFilter('${f.key}')">${f.label}</button>`).join('');
 }
 let currentFilter='';
 function setFilter(key){
