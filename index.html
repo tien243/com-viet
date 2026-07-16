@@ -78,10 +78,12 @@ header p{color:#7f6b5e;font-size:.88rem;margin-top:4px;font-weight:500}
 .tab-btn.active{background:#c0392b;color:#fff}
 .tab-content{display:none}
 .tab-content.active{display:block}
-.search-wrap{position:relative;margin-bottom:16px}
-.search-input{width:100%;padding:10px 14px 10px 38px;border:2px solid #d5c8bd;border-radius:12px;font-size:.9rem;font-family:inherit;background:#fff;transition:border-color .2s;outline:none}
+.search-wrap{position:relative;margin-bottom:16px;display:flex;gap:8px}
+.search-input{flex:1;padding:10px 14px 10px 38px;border:2px solid #d5c8bd;border-radius:12px;font-size:.9rem;font-family:inherit;background:#fff;transition:border-color .2s;outline:none}
 .search-input:focus{border-color:#c0392b}
 .search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:1rem;opacity:.6}
+.diff-select{padding:10px 12px;border:2px solid #d5c8bd;border-radius:12px;font-size:.82rem;font-family:inherit;background:#fff;color:#5a4a40;font-weight:600;cursor:pointer;transition:border-color .2s;outline:none;min-width:140px}
+.diff-select:focus{border-color:#c0392b}
 .results-area{min-height:200px}
 .menu-card{background:#fff;border-radius:16px;padding:20px 18px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:16px}
 .menu-card h2{font-size:1.1rem;font-weight:700;margin-bottom:10px;color:#2c2420}
@@ -178,7 +180,6 @@ footer{text-align:center;color:#b8a99a;font-size:.82rem;padding:30px 0 40px}
   <h1><span class="tag-red">Cơm</span> Bố Nấu</h1>
   <p>Thực đơn cho bố — bấm phát vào bếp liền</p>
 </header>
-<div class="stats" id="stats"></div>
 <div class="hero-actions">
   <button class="btn btn-primary" onclick="genDay()">🎲 Thực đơn hôm nay</button>
   <button class="btn btn-secondary" onclick="genWeek()">📅 Thực đơn cả tuần</button>
@@ -191,14 +192,17 @@ footer{text-align:center;color:#b8a99a;font-size:.82rem;padding:30px 0 40px}
 </div>
 <div class="tab-content active" id="tab-menu">
   <div class="filters" id="filters" data-active=""></div>
-  <div class="filter-row" id="diffFilters">
-    <button class="filter-chip-sm active" data-diff="" onclick="setDifficultyFilter('')">⏱️ Tất cả</button>
-    <button class="filter-chip-sm" data-diff="quick" onclick="setDifficultyFilter('quick')">⚡ Nhanh (&lt;45ph)</button>
-    <button class="filter-chip-sm" data-diff="easy" onclick="setDifficultyFilter('easy')">🌶️ Dễ</button>
-    <button class="filter-chip-sm" data-diff="medium" onclick="setDifficultyFilter('medium')">🌶️🌶️ TB</button>
-    <button class="filter-chip-sm" data-diff="hard" onclick="setDifficultyFilter('hard')">🌶️🌶️🌶️ Khó</button>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input class="search-input" id="searchInput" type="text" placeholder="Tìm món ăn..." oninput="searchDishes(this.value)" autocomplete="off">
+    <select class="diff-select" id="diffSelect" onchange="setDifficultyFilter(this.value)">
+      <option value="">⏱️ Tất cả</option>
+      <option value="quick">⚡ Nhanh (&lt;45ph)</option>
+      <option value="easy">🌶️ Dễ</option>
+      <option value="medium">🌶️🌶️ TB</option>
+      <option value="hard">🌶️🌶️🌶️ Khó</option>
+    </select>
   </div>
-  <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-input" id="searchInput" type="text" placeholder="Tìm món ăn..." oninput="searchDishes(this.value)" autocomplete="off" /></div>
   <div class="results-area" id="results"></div>
 </div>
 <div class="tab-content" id="tab-suggest">
@@ -3604,7 +3608,7 @@ function searchDishes(query){
   searchTimer=setTimeout(()=>{
     const q=query.toLowerCase().trim();searchQuery=q;
     const activeFilter=document.querySelector('.filter-chip.active')?.dataset.key||'';
-    const diffFilter=document.querySelector('#diffFilters .filter-chip-sm.active')?.dataset.diff||'';
+    const diffFilter=document.getElementById('diffSelect')?.value||'';
     let pool=activeFilter?dishes.filter(d=>d.cat===activeFilter):dishes;
     
     // Apply difficulty filter
@@ -3691,17 +3695,19 @@ function resetForm(tabId){location.reload()}
 // ── Stats & Filters ──
 function initUI(){
   const counts={man:0,canh:0,rau:0,nhau:0};dishes.forEach(d=>{if(d.cat==='man'||d.cat==='canh'||d.cat==='rau'||d.cat==='nhau')counts[d.cat]++});
-  document.getElementById('stats').innerHTML=`<span class="stat-item">🍖 Món mặn <span class="num">${counts.man}</span></span><span class="stat-item">🥣 Món canh <span class="num">${counts.canh}</span></span><span class="stat-item">🥬 Món rau <span class="num">${counts.rau}</span></span><span class="stat-item">🍻 Mồi bén <span class="num">${counts.nhau}</span></span>`;
+  
   document.getElementById('filters').innerHTML=[{key:'',label:'Tất cả'},{key:'man',label:'🍖 Món mặn'},{key:'canh',label:'🥣 Món canh'},{key:'rau',label:'🥬 Món rau'},{key:'nhau',label:'🍻 Mồi bén'}].map(f=>`<button class="filter-chip${f.key===''?' active':''}" data-key="${f.key}" onclick="setFilter('${f.key}')">${f.label}</button>`).join('');
 }
 let currentFilter='';
-function setDifficultyFilter(diff){
-  document.querySelectorAll('#diffFilters .filter-chip-sm').forEach(el=>el.classList.toggle('active',el.dataset.diff===diff));
+function setDifficultyFilter(val){
+  const sel=document.getElementById('diffSelect');
+  if(sel)sel.value=val;
   applyFilters();
 }
 function applyFilters(){
   const catFilter=currentFilter;
-  const diffFilter=document.querySelector('#diffFilters .filter-chip-sm.active')?.dataset.diff||'';
+  const sel=document.getElementById('diffSelect');
+  const diffFilter=sel?sel.value:'';
   let pool=catFilter?dishes.filter(d=>d.cat===catFilter):dishes;
   
   if(diffFilter==='quick')pool=pool.filter(d=>isQuickDish(d));
