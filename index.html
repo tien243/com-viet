@@ -57,6 +57,17 @@ header p{color:#7f6b5e;font-size:.88rem;margin-top:4px;font-weight:500}
 .btn-outline{background:transparent;color:#7f6b5e;border:2px solid #d5c8bd;padding:10px 18px;font-size:.88rem;border-radius:10px}
 .btn-outline:hover{border-color:#c0392b;color:#c0392b}
 .btn-sm{padding:10px 18px;font-size:.88rem}
+.difficulty-badge{display:inline-flex;align-items:center;gap:2px;font-size:.7rem;padding:2px 8px;border-radius:6px;font-weight:600;white-space:nowrap}
+.difficulty-easy{background:#e8f5e9;color:#2e7d32}
+.difficulty-medium{background:#fff3e0;color:#e65100}
+.difficulty-hard{background:#fee9e7;color:#c0392b}
+.time-badge{display:inline-flex;align-items:center;gap:2px;font-size:.7rem;padding:2px 8px;border-radius:6px;font-weight:600;white-space:nowrap;background:#e3f2fd;color:#1565c0}
+.filter-row{margin-bottom:10px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.filter-chip-sm{padding:4px 12px;border-radius:20px;border:1.5px solid #d5c8bd;background:transparent;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;color:#7f6b5e;font-family:inherit}
+.filter-chip-sm:hover{border-color:#c0392b;color:#c0392b}
+.filter-chip-sm.active{background:#c0392b;border-color:#c0392b;color:#fff}
+.share-btn{cursor:pointer;opacity:.7;transition:opacity .2s;padding:4px}
+.share-btn:hover{opacity:1}
 .filters{display:flex;gap:6px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
 .filter-chip{padding:6px 16px;border-radius:24px;border:2px solid #d5c8bd;background:transparent;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;color:#5a4a40;font-family:inherit}
 .filter-chip:hover{border-color:#c0392b}
@@ -180,6 +191,13 @@ footer{text-align:center;color:#b8a99a;font-size:.82rem;padding:30px 0 40px}
 </div>
 <div class="tab-content active" id="tab-menu">
   <div class="filters" id="filters" data-active=""></div>
+  <div class="filter-row" id="diffFilters">
+    <button class="filter-chip-sm active" data-diff="" onclick="setDifficultyFilter('')">⏱️ Tất cả</button>
+    <button class="filter-chip-sm" data-diff="quick" onclick="setDifficultyFilter('quick')">⚡ Nhanh (&lt;45ph)</button>
+    <button class="filter-chip-sm" data-diff="easy" onclick="setDifficultyFilter('easy')">🌶️ Dễ</button>
+    <button class="filter-chip-sm" data-diff="medium" onclick="setDifficultyFilter('medium')">🌶️🌶️ TB</button>
+    <button class="filter-chip-sm" data-diff="hard" onclick="setDifficultyFilter('hard')">🌶️🌶️🌶️ Khó</button>
+  </div>
   <div class="search-wrap"><span class="search-icon">🔍</span><input class="search-input" id="searchInput" type="text" placeholder="Tìm món ăn..." oninput="searchDishes(this.value)" autocomplete="off" /></div>
   <div class="results-area" id="results"></div>
 </div>
@@ -248,6 +266,7 @@ footer{text-align:center;color:#b8a99a;font-size:.82rem;padding:30px 0 40px}
     <div class="recipe-actions">
       <button id="cook-mode-button" class="btn btn-primary btn-sm" onclick="enterCookMode()">Vào bếp</button>
       <button class="btn btn-secondary btn-sm" onclick="addToShoppingList(currentRecipe?currentRecipe.id:null)" style="margin-left:8px">🛒 Thêm vào danh sách đi chợ</button>
+      <button class="btn btn-outline btn-sm" onclick="shareRecipe()" style="margin-left:8px" title="Chia sẻ">📤 Share</button>
     </div>
   </div>
 </div>
@@ -3499,12 +3518,28 @@ const PAGE_SIZE=25;
 const catLabel={man:'Món mặn',canh:'Món canh',rau:'Món rau',nhau:'Mồi bén',khac:'Món khác'};
 const catClass={man:'cat-man',canh:'cat-canh',rau:'cat-rau',nhau:'cat-nhau',khac:'cat-man'};
 const catDot={man:'#c0392b',canh:'#00897b',rau:'#388e3c',nhau:'#e67e22',khac:'#c0392b'};
+const diffLabel={easy:'Dễ',medium:'TB',hard:'Khó'};
+function diffBadge(d){if(!d)return'';const cls=d==='easy'?'difficulty-easy':d==='medium'?'difficulty-medium':'difficulty-hard';return`<span class="difficulty-badge ${cls}">🌶️ ${diffLabel[d]||d}</span>`}
+function timeBadge(t){if(!t)return'';return`<span class="time-badge">⏱️ ${t}</span>`}
+function hasRecipe(d){return d&&d.ingredients&&d.instructions}
+function totalMinsFromCookTime(t){if(!t)return 999;const m=t.match(/(\d+)\s*phút/);if(m)return parseInt(m[1]);const h=t.match(/(\d+)\s*tiếng/);if(h){const hm=t.match(/(\d+)\s*phút/);return parseInt(h[1])*60+(hm?parseInt(hm[1]):0)}return 999}
+function isQuickDish(d){return hasRecipe(d)&&totalMinsFromCookTime(d.cook_time)<=30&&totalMinsFromCookTime(d.prep_time||'0 phút')+totalMinsFromCookTime(d.cook_time)<=45}
 
 function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
 function pick(a,n){const s=shuffle(a);return s.slice(0,Math.min(n,s.length))}
 function formatDate(d=0){const x=new Date();x.setDate(x.getDate()+d);const dd=String(x.getDate()).padStart(2,'0'),mm=String(x.getMonth()+1).padStart(2,'0'),da=['CN','T2','T3','T4','T5','T6','T7'];return `${da[x.getDay()]}, ${dd}/${mm}`}
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._hide);t._hide=setTimeout(()=>t.classList.remove('show'),2200)}
 function copyMenu(){const el=document.getElementById('results'),t=el.innerText.trim();if(!t)return;navigator.clipboard.writeText(t).then(()=>showToast('📋 Đã copy!')).catch(()=>{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('📋 Đã copy!')})}
+function shareMenu(){
+  const el=document.getElementById('results'),t=el.innerText.trim();
+  if(!t)return;
+  const text=`🍽️ Cơm Bố Nấu — Thực đơn hôm nay\n\n${t}\n\nXem thêm tại: https://combonau.com`;
+  if(navigator.share){
+    navigator.share({title:'Cơm Bố Nấu — Thực đơn',text:text,url:'https://combonau.com'}).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(text).then(()=>showToast('📋 Đã copy! Dán chia sẻ FB/Zalo nhé.'));
+  }
+}
 
 function renderMenu(title,daysArray,isWeek=false){
   const el=document.getElementById('results');
@@ -3514,7 +3549,7 @@ function renderMenu(title,daysArray,isWeek=false){
     return `<div class="${isWeek?'week-day':''}">${isWeek?`<div class="menu-day-title">📅 ${day.label}</div>`:''}<div class="menu-grid">${items}</div></div>`;
   }).join('');
   const rb=isWeek?'<button class="btn btn-outline" onclick="genWeek()">🔄 Lại tuần khác</button>':'<button class="btn btn-outline" onclick="genDay()">🔄 Lại món khác</button>';
-  el.innerHTML=`<div class="menu-card fade-up"><h2>${title}</h2>${dh}<div class="menu-actions">${rb}<button class="btn btn-outline" onclick="copyMenu()">📋 Copy thực đơn</button></div></div>`;
+  el.innerHTML=`<div class="menu-card fade-up"><h2>${title}</h2>${dh}<div class="menu-actions">${rb}<button class="btn btn-outline" onclick="copyMenu()">📋 Copy thực đơn</button><button class="btn btn-outline" onclick="shareMenu()">📤 Share</button></div></div>`;
 }
 
 function genDay(){
@@ -3540,7 +3575,7 @@ function renderPage(){
   if(currentPage>totalPages)currentPage=totalPages||1;
   const start=(currentPage-1)*PAGE_SIZE,end=Math.min(start+PAGE_SIZE,f.length);
   const page=f.slice(start,end);
-  const html=page.map(d=>`<div class="browse-item" onclick="showRecipeDetail(${d.id})"><span class="browse-dot" style="background:${catDot[d.cat]}"></span><span style="flex:1">${d.name}</span><span class="btn-outline" style="padding:2px 8px;font-size:.7rem;border-radius:6px;cursor:pointer" onclick="event.stopPropagation();addToShoppingList(${d.id})">+🛒</span></div>`).join('');
+  const html=page.map(d=>`<div class="browse-item" onclick="showRecipeDetail(${d.id})"><span class="browse-dot" style="background:${catDot[d.cat]}"></span><span style="flex:1">${d.name}${hasRecipe(d)?`<br><span style="display:flex;gap:4px;margin-top:2px">${diffBadge(d.difficulty)}${timeBadge(d.cook_time)}</span>`:''}</span><span class="btn-outline" style="padding:2px 8px;font-size:.7rem;border-radius:6px;cursor:pointer" onclick="event.stopPropagation();addToShoppingList(${d.id})">+🛒</span></div>`).join('');
   const pagination=$pagination(totalPages);
   const el=document.getElementById('results');
   el.innerHTML=`<div class="menu-card fade-up"><h2>📖 Tất cả món ăn ${lastFilter?'('+catLabel[lastFilter]+')':''}</h2><p style="font-size:.85rem;color:#7f6b5e;margin-bottom:12px">${f.length} món · trang ${currentPage}/${totalPages}</p><div class="browse-grid">${html}</div>${pagination}</div>`;
@@ -3569,8 +3604,16 @@ function searchDishes(query){
   searchTimer=setTimeout(()=>{
     const q=query.toLowerCase().trim();searchQuery=q;
     const activeFilter=document.querySelector('.filter-chip.active')?.dataset.key||'';
+    const diffFilter=document.querySelector('#diffFilters .filter-chip-sm.active')?.dataset.diff||'';
     let pool=activeFilter?dishes.filter(d=>d.cat===activeFilter):dishes;
-    if(!q){showAll(activeFilter||null);return}
+    
+    // Apply difficulty filter
+    if(diffFilter==='quick')pool=pool.filter(d=>isQuickDish(d));
+    else if(diffFilter==='easy')pool=pool.filter(d=>d.difficulty==='easy');
+    else if(diffFilter==='medium')pool=pool.filter(d=>d.difficulty==='medium');
+    else if(diffFilter==='hard')pool=pool.filter(d=>d.difficulty==='hard');
+    
+    if(!q){applyFilters();return}
     const hits=pool.filter(d=>d.name.toLowerCase().includes(q)||d.desc.toLowerCase().includes(q));
     if(hits.length){
       searchResults=hits;currentPage=1;
@@ -3652,12 +3695,38 @@ function initUI(){
   document.getElementById('filters').innerHTML=[{key:'',label:'Tất cả'},{key:'man',label:'🍖 Món mặn'},{key:'canh',label:'🥣 Món canh'},{key:'rau',label:'🥬 Món rau'},{key:'nhau',label:'🍻 Mồi bén'}].map(f=>`<button class="filter-chip${f.key===''?' active':''}" data-key="${f.key}" onclick="setFilter('${f.key}')">${f.label}</button>`).join('');
 }
 let currentFilter='';
+function setDifficultyFilter(diff){
+  document.querySelectorAll('#diffFilters .filter-chip-sm').forEach(el=>el.classList.toggle('active',el.dataset.diff===diff));
+  applyFilters();
+}
+function applyFilters(){
+  const catFilter=currentFilter;
+  const diffFilter=document.querySelector('#diffFilters .filter-chip-sm.active')?.dataset.diff||'';
+  let pool=catFilter?dishes.filter(d=>d.cat===catFilter):dishes;
+  
+  if(diffFilter==='quick')pool=pool.filter(d=>isQuickDish(d));
+  else if(diffFilter==='easy')pool=pool.filter(d=>d.difficulty==='easy');
+  else if(diffFilter==='medium')pool=pool.filter(d=>d.difficulty==='medium');
+  else if(diffFilter==='hard')pool=pool.filter(d=>d.difficulty==='hard');
+  
+  lastFilter=catFilter;
+  lastFiltered=pool;
+  currentPage=1;
+  renderPage();
+}
 function setFilter(key){
   currentFilter=key;
   document.querySelectorAll('.filter-chip').forEach(el=>el.classList.toggle('active',el.dataset.key===key));
-  const q=document.getElementById('searchInput').value.trim();
-  if(q){searchDishes(q);return}
-  showAll(key||null);
+  applyFilters();
+}
+function shareRecipe(){
+  if(!currentRecipe)return;
+  const text=`🍽️ ${currentRecipe.name}\n${currentRecipe.desc}\n⏱️ ${currentRecipe.cook_time||'?'} | 🌶️ ${currentRecipe.difficulty||'?'}\n\nXem chi tiết tại: https://combonau.com`;
+  if(navigator.share){
+    navigator.share({title:currentRecipe.name,text:text,url:'https://combonau.com'}).catch(()=>{});
+  } else {
+    navigator.clipboard.writeText(text).then(()=>showToast('📋 Đã copy công thức! Có thể dán chia sẻ FB/Zalo.'));
+  }
 }
 let currentRecipe = null;
 let currentStep = 0;
@@ -3868,7 +3937,7 @@ function stopTimer() {
 }
 
 initUI();
-showAll();
+applyFilters();
 </script>
 </body>
 </html>
