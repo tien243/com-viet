@@ -3,6 +3,12 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Cơm Bố Nấu - Thực đơn cho bố vào bếp</title>
+<link rel="manifest" href="/manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Cơm Bố Nấu">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<meta name="theme-color" content="#c0392b">
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-YX51XV915D"></script>
 <script>
@@ -14,6 +20,19 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then((registration) => {
+          console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch((error) => {
+          console.log('Service Worker registration failed:', error);
+        });
+    });
+  }
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;scroll-behavior:smooth}
@@ -95,7 +114,51 @@ footer{text-align:center;color:#b8a99a;font-size:.82rem;padding:30px 0 40px}
 .fade-up{animation:fadeUp .35s ease-out}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#2c2420;color:#fff;padding:12px 28px;border-radius:12px;font-size:.9rem;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:1000}
 .toast.show{opacity:1}
+.modal{display:none;position:fixed;z-index:100;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,.6)}
+.modal.show{display:block}
+.modal-content{background-color:#fefefe;margin:5% auto;padding:30px;border-radius:16px;width:90%;max-width:700px;box-shadow:0 5px 15px rgba(0,0,0,.3);position:relative}
+.modal-content h2{font-size:1.6rem;color:#c0392b;margin-bottom:12px}
+.modal-content h3{font-size:1.2rem;color:#2c2420;margin-top:20px;margin-bottom:10px;border-bottom:1px solid #eee;padding-bottom:5px}
+.modal-content p{font-size:.95rem;color:#5a4a40;line-height:1.5}
+.modal-content ul,.modal-content ol{margin-left:20px;margin-bottom:15px;color:#5a4a40;font-size:.9rem}
+.modal-content ul li,.modal-content ol li{margin-bottom:8px}
+.recipe-summary{display:flex;flex-wrap:wrap;gap:15px;margin-bottom:20px;padding:10px 0;border-top:1px dashed #eee;border-bottom:1px dashed #eee}
+.recipe-summary span{font-size:.9rem;font-weight:600;color:#5a4a40}
+.recipe-summary span span{font-weight:400;color:#2c2420}
+.close-button{color:#aaa;float:right;font-size:28px;font-weight:bold;position:absolute;top:10px;right:20px;cursor:pointer}
+.close-button:hover,.close-button:focus{color:#333;text-decoration:none;cursor:pointer}
+.recipe-actions{margin-top:25px;text-align:center}
+
+.cook-mode{display:none;position:fixed;z-index:200;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:#2c2420;color:#fff;text-align:center;padding:20px}
+.cook-mode.show{display:flex;flex-direction:column;justify-content:space-between;align-items:center}
+.cook-mode-exit{position:absolute;top:20px;right:20px;color:#d5c8bd;font-size:1rem;cursor:pointer;padding:8px 15px;border:1px solid #d5c8bd;border-radius:10px}
+.cook-mode-exit:hover{color:#fff;border-color:#fff}
+.cook-mode h2{font-size:2.5rem;margin-top:40px;color:#fff}
+.cook-mode-step-indicator{font-size:1.5rem;color:#b8a99a;margin-top:20px}
+.cook-mode-step-indicator span{font-weight:bold;color:#c0392b}
+.cook-mode-step-text{font-size:2.2rem;line-height:1.4;margin:40px auto;max-width:800px;flex-grow:1;display:flex;align-items:center;justify-content:center}
+.cook-mode-navigation{display:flex;justify-content:space-around;width:100%;max-width:500px;margin-bottom:20px}
+.cook-mode-navigation .btn{padding:15px 30px;font-size:1.1rem;flex-grow:1;margin:0 10px}
+.cook-mode-timer-section{margin-top:30px;margin-bottom:40px;display:flex;flex-direction:column;align-items:center;gap:15px}
+#countdown-timer{font-size:4rem;font-weight:bold;color:#c0392b;font-variant-numeric:tabular-nums}
+#timer-button{padding:12px 25px;font-size:1rem}
+@media(max-width:600px){.modal-content{margin:10px auto;width:95%;padding:20px}
+.cook-mode h2{font-size:1.8rem}
+.cook-mode-step-text{font-size:1.6rem;margin:20px auto}}
 </style>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js')
+        .then((registration) => {
+          console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch((error) => {
+          console.log('Service Worker registration failed:', error);
+        });
+    });
+  }
+</script>
 </head>
 <body>
 <div class="container">
@@ -113,6 +176,7 @@ footer{text-align:center;color:#b8a99a;font-size:.82rem;padding:30px 0 40px}
   <button class="tab-btn active" onclick="switchTab('menu')">📖 Thực đơn</button>
   <button class="tab-btn" onclick="switchTab('suggest')">🍽️ Góp ý món</button>
   <button class="tab-btn" onclick="switchTab('feature')">💡 Đề xuất</button>
+  <button class="tab-btn" onclick="switchTab('shoppingList')">🛒 Danh sách đi chợ</button>
 </div>
 <div class="tab-content active" id="tab-menu">
   <div class="filters" id="filters" data-active=""></div>
@@ -144,27 +208,496 @@ footer{text-align:center;color:#b8a99a;font-size:.82rem;padding:30px 0 40px}
     </form>
   </div>
 </div>
+<div class="tab-content" id="tab-shoppingList">
+  <div class="menu-card fade-up">
+    <h2>🛒 Danh sách đi chợ</h2>
+    <div id="shoppingListContainer">
+      <p style="color:#7f6b5e;font-size:.9rem;margin-bottom:16px">Thêm món ăn vào danh sách từ phần Thực đơn hoặc nhập tay bên dưới.</p>
+      <ul id="shoppingListItems" style="list-style: none; margin-bottom: 16px;"></ul>
+      <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+        <input type="text" id="manualIngredientName" class="search-input" style="flex: 1;" placeholder="Tên nguyên liệu" />
+        <input type="number" id="manualIngredientQuantity" class="search-input" style="width: 80px;" placeholder="SL" value="1" />
+        <input type="text" id="manualIngredientUnit" class="search-input" style="width: 80px;" placeholder="Đơn vị" value="v" />
+        <button class="btn btn-secondary btn-sm" onclick="addManualIngredient()">Thêm mục</button>
+      </div>
+      <div class="menu-actions">
+        <button class="btn btn-outline btn-sm" onclick="clearCheckedShoppingList()">Xóa mục đã mua</button>
+        <button class="btn btn-outline btn-sm" onclick="clearAllShoppingList()">Xóa tất cả</button>
+        <button class="btn btn-outline btn-sm" onclick="copyShoppingList()">📋 Copy danh sách</button>
+      </div>
+    </div>
+  </div>
+</div>
 <footer>Cơm Bố Nấu &middot; Dành cho các bố thương vợ &hearts;</footer>
+</div>
+<div id="recipe-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-button" onclick="closeRecipeModal()">&times;</span>
+    <h2 id="recipe-name"></h2>
+    <p id="recipe-desc"></p>
+    <div class="recipe-summary">
+      <span style="display:none;" id="rcp-prep-time-span">⏱️ TXCB: <span id="recipe-prep-time"></span></span>
+      <span style="display:none;" id="rcp-cook-time-span">🍳 TXN: <span id="recipe-cook-time"></span></span>
+      <span style="display:none;" id="rcp-difficulty-span">🌶️ Độ khó: <span id="recipe-difficulty"></span></span>
+      <span style="display:none;" id="rcp-servings-span">👨‍👩‍👧‍👦 KP: <span id="recipe-servings"></span></span>
+    </div>
+    <h3>Nguyên liệu</h3>
+    <ul id="recipe-ingredients"></ul>
+    <h3>Các bước nấu</h3>
+    <ol id="recipe-instructions"></ol>
+    <div class="recipe-actions">
+      <button id="cook-mode-button" class="btn btn-primary btn-sm" onclick="enterCookMode()">Vào bếp</button>
+      <button class="btn btn-secondary btn-sm" onclick="addToShoppingList(currentRecipe?currentRecipe.id:null)" style="margin-left:8px">🛒 Thêm vào danh sách đi chợ</button>
+    </div>
+  </div>
+</div>
+
+<div id="cook-mode" class="cook-mode">
+  <span class="cook-mode-exit" onclick="exitCookMode()">&times; Thoát</span>
+  <h2 id="cook-mode-recipe-name"></h2>
+  <div class="cook-mode-step-indicator">Bước <span id="current-step-num">1</span> / <span id="total-steps-num"></span></div>
+  <div id="cook-mode-current-step" class="cook-mode-step-text"></div>
+  <div class="cook-mode-timer-section">
+    <button id="timer-button" class="btn btn-primary btn-sm" onclick="toggleTimer()">⏰ Bắt đầu hẹn giờ</button>
+    <div id="countdown-timer">00:00</div>
+  </div>
+  <div class="cook-mode-navigation">
+    <button id="prev-step-button" class="btn btn-secondary" onclick="prevStep()">← Bước trước</button>
+    <button id="next-step-button" class="btn btn-primary" onclick="nextStep()">Bước tiếp theo →</button>
+  </div>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
 const dishes = [
-{id:1,name:'Thịt kho tàu (thịt kho trứng)',cat:'man',desc:'Thịt ba chỉ kho mềm với trứng cút, nước dừa'},
-{id:2,name:'Thịt kho tiêu',cat:'man',desc:'Thịt ba chỉ kho tiêu đậm đà, ăn với cơm nóng'},
-{id:3,name:'Cá kho tộ',cat:'man',desc:'Cá basa kho nồi đất với nước mắm, tiêu, ớt'},
-{id:4,name:'Cá diêu hồng chiên sốt cà',cat:'man',desc:'Cá chiên giòn rưới sốt cà chua chua ngọt'},
-{id:5,name:'Gà kho gừng',cat:'man',desc:'Đùi gà kho với gừng tươi thơm nồng'},
-{id:6,name:'Gà luộc',cat:'man',desc:'Gà luộc chấm muối tiêu chanh'},
-{id:7,name:'Thịt rang cháy cạnh',cat:'man',desc:'Thịt ba chỉ rang lửa lớn xém cạnh thơm giòn'},
-{id:8,name:'Sườn xào chua ngọt',cat:'man',desc:'Sườn non xào chua ngọt kiểu Việt'},
-{id:9,name:'Tôm rim me',cat:'man',desc:'Tôm rim nước me chua ngọt, đậm đà'},
-{id:10,name:'Tôm rang thịt',cat:'man',desc:'Tôm rang thịt băm, nước mắm đường'},
-{id:11,name:'Chả trứng hấp',cat:'man',desc:'Trứng gà hấp thịt băm, miến, mộc nhĩ'},
-{id:12,name:'Thịt băm xào sả ớt',cat:'man',desc:'Thịt heo xay xào với sả ớt thơm nức'},
-{id:13,name:'Bò xào rau củ',cat:'man',desc:'Thịt bò xào cùng cà rốt, su hào, ớt chuông'},
-{id:14,name:'Đậu hũ nhồi thịt sốt cà',cat:'man',desc:'Đậu hũ nhồi thịt chiên vàng, sốt cà chua'},
-{id:15,name:'Đậu hũ chiên sả ớt',cat:'man',desc:'Đậu hũ chiên giòn rim sả ớt mặn ngọt'},
+{
+  id:1,
+  name:'Thịt kho tàu (thịt kho trứng)',
+  cat:'man',
+  desc:'Thịt ba chỉ kho mềm với trứng cút, nước dừa',
+  prep_time: '20 phút',
+  cook_time: '1 tiếng 30 phút',
+  difficulty: 'trung bình',
+  servings: '4 người',
+  ingredients: [
+    {item: 'Thịt ba chỉ', quantity: '500g'},
+    {item: 'Trứng cút', quantity: '10 quả'},
+    {item: 'Nước dừa tươi', quantity: '500ml'},
+    {item: 'Nước mắm ngon', quantity: '3 muỗng canh'},
+    {item: 'Đường', quantity: '2 muỗng canh'},
+    {item: 'Hành tím băm', quantity: '2 củ'},
+    {item: 'Tỏi băm', quantity: '1 củ'},
+    {item: 'Tiêu xay', quantity: '1/2 muỗng cà phê'},
+    {item: 'Ớt tươi', quantity: '2 trái (tùy chọn)'},
+    {item: 'Dầu ăn', quantity: '1 muỗng canh'}
+  ],
+  instructions: [
+    'Luộc chín trứng cút, bóc vỏ. Thịt ba chỉ rửa sạch, cạo bì, cắt miếng vuông khoảng 3-4cm. Trụng sơ thịt qua nước sôi có chút muối.',
+    'Ướp thịt với 2 muỗng canh nước mắm, 1 muỗng canh đường, hành tím băm, tỏi băm, tiêu xay. Để khoảng 30 phút cho thịt thấm gia vị.',
+    'Làm nước màu (caramel): Cho 1 muỗng canh đường và 1 muỗng canh nước vào nồi, đun nhỏ lửa đến khi đường chuyển sang màu cánh gián. Cho thịt đã ướp vào đảo đều đến khi thịt săn lại và có màu đẹp.',
+    'Đổ nước dừa tươi vào nồi, thêm 1 muỗng canh nước mắm còn lại, ớt tươi (nếu thích). Đun sôi rồi hạ nhỏ lửa, kho khoảng 1 tiếng.',
+    'Sau 1 tiếng, cho trứng cút đã bóc vỏ vào nồi, tiếp tục kho thêm khoảng 30 phút nữa hoặc đến khi nước kho sánh lại, thịt mềm nhừ.',
+    'Nêm nếm lại gia vị cho vừa ăn. Dùng nóng với cơm trắng.'
+  ]
+},
+{
+  id:2,
+  name:'Thịt kho tiêu',
+  cat:'man',
+  desc:'Thịt ba chỉ kho tiêu đậm đà, ăn với cơm nóng',
+  prep_time: '15 phút',
+  cook_time: '45 phút',
+  difficulty: 'dễ',
+  servings: '3 người',
+  ingredients: [
+    {item: 'Thịt ba chỉ', quantity: '300g'},
+    {item: 'Tiêu xanh', quantity: '1 muỗng canh'},
+    {item: 'Nước mắm', quantity: '2 muỗng canh'},
+    {item: 'Đường', quantity: '1 muỗng canh'},
+    {item: 'Hành tím băm', quantity: '1 củ'},
+    {item: 'Tỏi băm', quantity: '1 củ'},
+    {item: 'Dầu ăn', quantity: '1 muỗng canh'}
+  ],
+  instructions: [
+    'Thịt ba chỉ rửa sạch, cắt miếng vừa ăn.',
+    'Ướp thịt với nước mắm, đường, hành tím, tỏi băm và tiêu xanh đập dập trong 15 phút.',
+    'Phi thơm hành tỏi băm với dầu ăn, cho thịt vào xào săn.',
+    'Đổ thêm một ít nước sôi vào vừa ngập mặt thịt, đun sôi rồi hạ lửa nhỏ, kho đến khi thịt mềm và nước sánh lại.',
+    'Nêm nếm lại gia vị vừa ăn, rắc thêm tiêu xay nếu thích. Dùng nóng với cơm.'
+  ]
+},
+{
+  id:3,
+  name:'Cá kho tộ',
+  cat:'man',
+  desc:'Cá basa kho nồi đất với nước mắm, tiêu, ớt',
+  prep_time: '20 phút',
+  cook_time: '1 tiếng',
+  difficulty: 'trung bình',
+  servings: '4 người',
+  ingredients: [
+    {item: 'Cá basa', quantity: '500g'},
+    {item: 'Thịt ba chỉ', quantity: '100g'},
+    {item: 'Nước mắm ngon', quantity: '4 muỗng canh'},
+    {item: 'Đường', quantity: '2 muỗng canh'},
+    {item: 'Hành tím băm', quantity: '2 củ'},
+    {item: 'Tỏi băm', quantity: '1 củ'},
+    {item: 'Ớt hiểm', quantity: '3 trái'},
+    {item: 'Tiêu xay', quantity: '1 muỗng cà phê'},
+    {item: 'Dầu ăn', quantity: '1 muỗng canh'},
+    {item: 'Nước màu dừa', quantity: '1 muỗng cà phê (tùy chọn)'}
+  ],
+  instructions: [
+    'Cá basa làm sạch, cắt khúc vừa ăn, ướp với chút muối và tiêu. Thịt ba chỉ rửa sạch, cắt lát mỏng.',
+    'Ướp cá và thịt với nước mắm, đường, hành tím băm, tỏi băm, ớt hiểm đập dập, tiêu xay và nước màu (nếu dùng) trong khoảng 30 phút.',
+    'Đun nóng dầu ăn trong nồi đất, cho hành tỏi còn lại vào phi thơm. Cho thịt ba chỉ vào xào săn, ra mỡ.',
+    'Xếp cá lên trên thịt, đổ phần nước ướp vào. Thêm một ít nước lọc (hoặc nước dừa tươi) vừa ngập mặt cá.',
+    'Đun sôi rồi hạ nhỏ lửa, kho liu riu khoảng 45-60 phút đến khi cá và thịt mềm, nước kho sánh lại. Thi thoảng rưới nước kho lên mặt cá để cá thấm đều.',
+    'Tắt bếp, rắc thêm tiêu xay và vài lát ớt tươi (nếu thích). Dùng nóng với cơm trắng.'
+  ]
+},
+{
+  id:4,
+  name:'Cá diêu hồng chiên sốt cà',
+  cat:'man',
+  desc:'Cá chiên giòn rưới sốt cà chua chua ngọt',
+  prep_time: '20 phút',
+  cook_time: '30 phút',
+  difficulty: 'dễ',
+  servings: '3-4 người',
+  ingredients: [
+    {item: 'Cá diêu hồng', quantity: '1 con (khoảng 800g)'},
+    {item: 'Cà chua', quantity: '3-4 quả'},
+    {item: 'Hành tây', quantity: '1/2 củ'},
+    {item: 'Tỏi băm', quantity: '1 muỗng canh'},
+    {item: 'Hành lá', quantity: '2 nhánh'},
+    {item: 'Nước mắm', quantity: '2 muỗng canh'},
+    {item: 'Đường', quantity: '1 muỗng canh'},
+    {item: 'Giấm gạo', quantity: '1 muỗng canh'},
+    {item: 'Bột năng', quantity: '1 muỗng cà phê'},
+    {item: 'Dầu ăn', quantity: 'đủ chiên'},
+    {item: 'Muối, tiêu', quantity: 'vừa đủ'}
+  ],
+  instructions: [
+    'Cá diêu hồng làm sạch, khứa vài đường trên thân, ướp với chút muối, tiêu. Để ráo khoảng 15 phút.',
+    'Cà chua rửa sạch, cắt múi cau. Hành tây bóc vỏ, thái hạt lựu. Hành lá cắt nhỏ.',
+    'Đun nóng chảo dầu, cho cá vào chiên vàng đều hai mặt, vớt ra đĩa có lót giấy thấm dầu.',
+    'Phi thơm tỏi băm với ít dầu ăn, cho hành tây vào xào mềm. Tiếp đến cho cà chua vào xào, dằm nát. Thêm nước mắm, đường, giấm, một chén nước lọc vào đun sôi.',
+    'Hòa bột năng với chút nước, từ từ đổ vào chảo sốt, khuấy đều đến khi sốt sánh lại. Nêm nếm lại cho vừa chua, ngọt, mặn.',
+    'Rưới sốt cà chua lên đĩa cá đã chiên. Rắc hành lá và tiêu. Dùng nóng với cơm.'
+  ]
+},
+{
+  id:5,
+  name:'Gà kho gừng',
+  cat:'man',
+  desc:'Đùi gà kho với gừng tươi thơm nồng',
+  prep_time: '15 phút',
+  cook_time: '40 phút',
+  difficulty: 'dễ',
+  servings: '3 người',
+  ingredients: [
+    {item: 'Đùi gà góc tư', quantity: '2 cái'},
+    {item: 'Gừng tươi', quantity: '1 củ lớn'},
+    {item: 'Hành tím', quantity: '2 củ'},
+    {item: 'Tỏi', quantity: '1 củ'},
+    {item: 'Nước mắm', quantity: '3 muỗng canh'},
+    {item: 'Đường', quantity: '2 muỗng canh'},
+    {item: 'Tiêu xay', quantity: '1/2 muỗng cà phê'},
+    {item: 'Dầu ăn', quantity: '1 muỗng canh'},
+    {item: 'Nước màu dừa', quantity: '1 muỗng cà phê (tùy chọn)'}
+  ],
+  instructions: [
+    'Đùi gà rửa sạch, chặt miếng vừa ăn. Gừng cạo vỏ, một nửa thái lát, một nửa đập dập băm nhỏ. Hành tím, tỏi băm nhỏ.',
+    'Ướp gà với nước mắm, đường, gừng băm, hành tỏi băm, tiêu xay và nước màu (nếu dùng) trong khoảng 20 phút.',
+    'Đun nóng dầu ăn, cho hành tỏi còn lại vào phi thơm. Cho gà đã ướp vào xào săn.',
+    'Thêm gừng thái lát và một chén nước lọc (hoặc nước dừa tươi) vào nồi, đun sôi. Hạ nhỏ lửa, kho khoảng 30 phút đến khi gà mềm và nước kho sánh lại.',
+    'Nêm nếm lại gia vị cho vừa ăn. Rắc thêm tiêu xay. Dùng nóng với cơm.'
+  ]
+},
+{
+  id:6,
+  name:'Gà luộc',
+  cat:'man',
+  desc:'Gà luộc chấm muối tiêu chanh',
+  prep_time: '10 phút',
+  cook_time: '30 phút',
+  difficulty: 'dễ',
+  servings: '4 người',
+  ingredients: [
+    {item: 'Gà ta', quantity: '1 con (khoảng 1.2kg)'},
+    {item: 'Hành tây', quantity: '1 củ'},
+    {item: 'Gừng tươi', quantity: '1 củ'},
+    {item: 'Sả', quantity: '2 nhánh'},
+    {item: 'Rau răm', quantity: '1 bó'},
+    {item: 'Chanh', quantity: '1 quả'},
+    {item: 'Muối, tiêu', quantity: 'vừa đủ'}
+  ],
+  instructions: [
+    'Gà làm sạch, sát muối và gừng đập dập cả trong lẫn ngoài để khử mùi tanh, rửa sạch lại.',
+    'Cho gà vào nồi, đổ nước lạnh ngập gà. Thêm hành tây bổ đôi, gừng thái lát, sả đập dập vào nồi.',
+    'Đun sôi rồi hạ nhỏ lửa, luộc khoảng 20-30 phút tùy trọng lượng gà. Để kiểm tra gà chín, dùng đũa đâm vào phần đùi, nếu nước chảy ra không còn màu hồng là gà đã chín.',
+    'Vớt gà ra, ngâm ngay vào thau nước đá lạnh khoảng 10 phút để da gà giòn và có màu vàng đẹp.',
+    'Chặt gà thành miếng vừa ăn. Pha nước chấm: muối, tiêu, ớt, nước cốt chanh khuấy đều. Rắc rau răm lên đĩa gà. Dùng nóng hoặc nguội đều ngon.'
+  ]
+},
+{
+  id:7,
+  name:'Thịt rang cháy cạnh',
+  cat:'man',
+  desc:'Thịt ba chỉ rang lửa lớn xém cạnh thơm giòn',
+  prep_time: '10 phút',
+  cook_time: '20 phút',
+  difficulty: 'dễ',
+  servings: '3 người',
+  ingredients: [
+    {item: 'Thịt ba chỉ', quantity: '300g'},
+    {item: 'Hành tím băm', quantity: '1 muỗng canh'},
+    {item: 'Nước mắm', quantity: '2 muỗng canh'},
+    {item: 'Đường', quantity: '1 muỗng canh'},
+    {item: 'Tiêu xay', quantity: '1/2 muỗng cà phê'},
+    {item: 'Dầu ăn', quantity: '1 muỗng canh'}
+  ],
+  instructions: [
+    'Thịt ba chỉ rửa sạch, thái lát mỏng vừa ăn.',
+    'Ướp thịt với 1 muỗng canh nước mắm, 1/2 muỗng canh đường, hành tím băm, tiêu xay khoảng 10 phút.',
+    'Đun nóng chảo với 1 muỗng canh dầu ăn. Cho thịt đã ướp vào rang trên lửa lớn đến khi thịt ra mỡ, săn lại và các cạnh hơi xém vàng.',
+    'Chắt bớt mỡ nếu quá nhiều. Thêm 1 muỗng canh nước mắm và 1/2 muỗng canh đường còn lại vào, đảo nhanh tay cho gia vị bám đều vào thịt và keo lại.',
+    'Rang thêm vài phút cho thịt có màu cánh gián đẹp. Tắt bếp, rắc thêm tiêu. Dùng nóng với cơm trắng.'
+  ]
+},
+{
+  id:8,
+  name:'Sườn xào chua ngọt',
+  cat:'man',
+  desc:'Sườn non xào chua ngọt kiểu Việt',
+  prep_time: '20 phút',
+  cook_time: '35 phút',
+  difficulty: 'trung bình',
+  servings: '4 người',
+  ingredients: [
+    {item: 'Sườn non', quantity: '500g'},
+    {item: 'Hành tây', quantity: '1/2 củ'},
+    {item: 'Ớt chuông đỏ', quantity: '1/2 quả'},
+    {item: 'Tỏi băm', quantity: '1 muỗng canh'},
+    {item: 'Nước mắm', quantity: '3 muỗng canh'},
+    {item: 'Đường', quantity: '2 muỗng canh'},
+    {item: 'Giấm gạo', quantity: '2 muỗng canh'},
+    {item: 'Tương ớt', quantity: '1 muỗng canh (tùy chọn)'},
+    {item: 'Bột năng', quantity: '1 muỗng cà phê'},
+    {item: 'Dầu ăn', quantity: 'đủ chiên'},
+    {item: 'Muối, tiêu', quantity: 'vừa đủ'}
+  ],
+  instructions: [
+    'Sườn non rửa sạch, chặt miếng vừa ăn. Chần sơ qua nước sôi có chút muối để loại bỏ tạp chất. Vớt ra rửa sạch, để ráo.',
+    'Ướp sườn với 1 muỗng canh nước mắm, chút đường, muối, tiêu khoảng 15 phút.',
+    'Hành tây, ớt chuông thái hạt lựu.',
+    'Pha nước sốt chua ngọt: 2 muỗng canh nước mắm, 2 muỗng canh đường, 2 muỗng canh giấm, tương ớt (nếu dùng), 1 chén nước lọc, bột năng. Khuấy đều.',
+    'Đun nóng dầu ăn, cho sườn vào chiên vàng đều các mặt. Vớt ra, để ráo dầu.',
+    'Phi thơm tỏi băm. Cho hành tây, ớt chuông vào xào nhanh. Đổ nước sốt chua ngọt vào đun sôi.',
+    'Cho sườn đã chiên vào, đảo đều cho sườn thấm sốt. Đun nhỏ lửa đến khi nước sốt sánh lại và bám đều vào sườn. Nêm nếm lại cho vừa ăn. Dùng nóng.'
+  ]
+},
+{
+  id:9,
+  name:'Tôm rim me',
+  cat:'man',
+  desc:'Tôm rim nước me chua ngọt, đậm đà',
+  prep_time: '15 phút',
+  cook_time: '25 phút',
+  difficulty: 'dễ',
+  servings: '3 người',
+  ingredients: [
+    {item: 'Tôm tươi', quantity: '400g'},
+    {item: 'Vắt me chín', quantity: '50g'},
+    {item: 'Hành tím băm', quantity: '1 muỗng canh'},
+    {item: 'Tỏi băm', quantity: '1 muỗng canh'},
+    {item: 'Nước mắm', quantity: '2 muỗng canh'},
+    {item: 'Đường', quantity: '2 muỗng canh'},
+    {item: 'Ớt tươi', quantity: '1-2 trái'},
+    {item: 'Dầu ăn', quantity: '1 muỗng canh'}
+  ],
+  instructions: [
+    'Tôm rửa sạch, cắt bỏ râu, rút chỉ đen ở lưng. Ướp tôm với 1 muỗng canh nước mắm, chút đường, tiêu khoảng 10 phút.',
+    'Me chín cho vào chén, thêm 50ml nước sôi, dằm nát rồi lọc bỏ bã, lấy nước cốt me.',
+    'Phi thơm hành tỏi băm với dầu ăn. Cho tôm vào xào nhanh tay đến khi tôm chuyển màu.',
+    'Đổ nước cốt me, 1 muỗng canh nước mắm còn lại, 2 muỗng canh đường, ớt thái lát vào. Đảo đều.',
+    'Đun nhỏ lửa đến khi nước sốt sánh lại, tôm thấm đều gia vị. Nêm nếm lại cho vừa ăn.',
+    'Tắt bếp. Dùng nóng với cơm trắng, có thể rắc thêm hành lá hoặc rau mùi.'
+  ]
+},
+{
+  id:10,
+  name:'Tôm rang thịt',
+  cat:'man',
+  desc:'Tôm rang thịt băm, nước mắm đường',
+  prep_time: '15 phút',
+  cook_time: '25 phút',
+  difficulty: 'dễ',
+  servings: '3 người',
+  ingredients: [
+    {item: 'Tôm tươi', quantity: '300g'},
+    {item: 'Thịt ba chỉ băm', quantity: '150g'},
+    {item: 'Hành tím băm', quantity: '1 muỗng canh'},
+    {item: 'Tỏi băm', quantity: '1 muỗng canh'},
+    {item: 'Nước mắm', quantity: '3 muỗng canh'},
+    {item: 'Đường', quantity: '2 muỗng canh'},
+    {item: 'Tiêu xay', quantity: '1/2 muỗng cà phê'},
+    {item: 'Dầu ăn', quantity: '1 muỗng canh'},
+    {item: 'Hành lá', quantity: '1 nhánh'}
+  ],
+  instructions: [
+    'Tôm rửa sạch, bỏ đầu, bóc vỏ (để lại đuôi nếu thích), rút chỉ đen. Ướp tôm với chút nước mắm, đường, tiêu.',
+    'Thịt ba chỉ băm ướp với chút nước mắm, tiêu.',
+    'Phi thơm hành tỏi băm với dầu ăn. Cho thịt băm vào xào săn, ra mỡ.',
+    'Cho tôm vào xào nhanh tay đến khi tôm chuyển màu. Thêm 2 muỗng canh nước mắm và 2 muỗng canh đường còn lại vào, đảo đều.',
+    'Đun nhỏ lửa cho hỗn hợp sánh lại, tôm và thịt thấm gia vị, có màu vàng cánh gián đẹp mắt.',
+    'Nêm nếm lại vừa ăn. Rắc hành lá thái nhỏ và tiêu xay. Dùng nóng với cơm trắng.'
+  ]
+},
+{id:11,
+  name:'Chả trứng hấp',
+  cat:'man',
+  desc:'Trứng gà hấp thịt băm, miến, mộc nhĩ',
+  prep_time: '25 phút',
+  cook_time: '45 phút',
+  difficulty: 'trung bình',
+  servings: '4 người',
+  ingredients: [
+    {item: 'Trứng gà', quantity: '4 quả'},
+    {item: 'Thịt nạc vai băm', quantity: '200g'},
+    {item: 'Miến dong', quantity: '50g'},
+    {item: 'Mộc nhĩ, nấm hương', quantity: '10g'},
+    {item: 'Hành tây', quantity: '1/4 củ'},
+    {item: 'Hành lá', quantity: '2 nhánh'},
+    {item: 'Nước mắm', quantity: '1 muỗng canh'},
+    {item: 'Hạt nêm', quantity: '1 muỗng cà phê'},
+    {item: 'Tiêu xay', quantity: '1/2 muỗng cà phê'}
+  ],
+  instructions: [
+    'Miến dong ngâm mềm, cắt khúc ngắn. Mộc nhĩ, nấm hương ngâm nở, rửa sạch, băm nhỏ. Hành tây băm nhỏ, hành lá cắt nhỏ.',
+    'Trộn đều thịt băm, miến, mộc nhĩ, nấm hương, hành tây, hành lá với 1 quả trứng, nước mắm, hạt nêm, tiêu xay để làm nhân.',
+    'Cho hỗn hợp vào đĩa sâu lòng hoặc khuôn hấp. Đánh tan 3 quả trứng còn lại, rưới đều lên bề mặt hỗn hợp thịt.',
+    'Hấp cách thủy khoảng 30-40 phút đến khi chả chín. Kiểm tra bằng cách dùng tăm xuyên qua, nếu tăm rút ra sạch là chả đã chín.',
+    'Lấy chả ra, cắt miếng vừa ăn. Dùng nóng với cơm trắng và nước mắm ớt.'
+  ]
+},
+{
+  id:12,
+  name:'Thịt băm xào sả ớt',
+  cat:'man',
+  desc:'Thịt heo xay xào với sả ớt thơm nức',
+  prep_time: '10 phút',
+  cook_time: '20 phút',
+  difficulty: 'dễ',
+  servings: '3 người',
+  ingredients: [
+    {item: 'Thịt nạc vai băm', quantity: '300g'},
+    {item: 'Sả băm', quantity: '2 muỗng canh'},
+    {item: 'Ớt tươi băm', quantity: '1 muỗng cà phê (tùy chỉnh)'},
+    {item: 'Tỏi băm', quantity: '1 muỗng canh'},
+    {item: 'Hành tím băm', quantity: '1 muỗng canh'},
+    {item: 'Nước mắm', quantity: '2 muỗng canh'},
+    {item: 'Đường', quantity: '1 muỗng canh'},
+    {item: 'Tiêu xay', quantity: '1/2 muỗng cà phê'},
+    {item: 'Dầu ăn', quantity: '1 muỗng canh'}
+  ],
+  instructions: [
+    'Thịt băm ướp với 1 muỗng canh nước mắm, 1/2 muỗng đường, tiêu xay trong 10 phút.',
+    'Phi thơm hành, tỏi, sả, ớt băm với dầu ăn. Cho thịt băm vào xào săn trên lửa lớn.',
+    'Khi thịt chín và tơi ra, thêm 1 muỗng canh nước mắm, 1/2 muỗng đường còn lại vào, đảo đều.',
+    'Xào đến khi thịt hơi xém cạnh và khô ráo. Nêm nếm lại gia vị cho vừa ăn.',
+    'Dùng nóng với cơm trắng hoặc làm nhân bánh mì.'
+  ]
+},
+{
+  id:13,
+  name:'Bò xào rau củ',
+  cat:'man',
+  desc:'Thịt bò xào cùng cà rốt, su hào, ớt chuông',
+  prep_time: '15 phút',
+  cook_time: '15 phút',
+  difficulty: 'dễ',
+  servings: '3-4 người',
+  ingredients: [
+    {item: 'Thịt bò thăn', quantity: '300g'},
+    {item: 'Cà rốt', quantity: '1 củ'},
+    {item: 'Su hào', quantity: '1 củ'},
+    {item: 'Ớt chuông xanh/đỏ', quantity: '1 quả'},
+    {item: 'Hành tây', quantity: '1 củ'},
+    {item: 'Tỏi băm', quantity: '1 muỗng canh'},
+    {item: 'Dầu hào', quantity: '1 muỗng canh'},
+    {item: 'Nước tương', quantity: '1 muỗng canh'},
+    {item: 'Dầu ăn', quantity: '2 muỗng canh'},
+    {item: 'Gia vị', quantity: 'Muối, tiêu, đường'}
+  ],
+  instructions: [
+    'Thịt bò thái lát mỏng, ướp với dầu hào, nước tương, tiêu, chút dầu ăn trong 10 phút.',
+    'Cà rốt, su hào gọt vỏ, thái sợi hoặc thái miếng vừa ăn. Ớt chuông bỏ hạt, thái miếng. Hành tây bổ múi cau.',
+    'Làm nóng chảo với dầu ăn, phi thơm tỏi. Cho thịt bò vào xào nhanh trên lửa lớn đến khi chín tái, vớt ra đĩa.',
+    'Cho cà rốt, su hào vào xào trước khoảng 3-5 phút cho chín tới. Tiếp đến cho ớt chuông và hành tây vào xào thêm 2-3 phút.',
+    'Cho thịt bò trở lại chảo, đảo đều. Nêm nếm lại gia vị cho vừa ăn. Tắt bếp.',
+    'Dùng nóng với cơm trắng.'
+  ]
+},
+{
+  id:14,
+  name:'Đậu hũ nhồi thịt sốt cà',
+  cat:'man',
+  desc:'Đậu hũ nhồi thịt chiên vàng, sốt cà chua',
+  prep_time: '20 phút',
+  cook_time: '30 phút',
+  difficulty: 'trung bình',
+  servings: '3-4 người',
+  ingredients: [
+    {item: 'Đậu hũ chiên', quantity: '5 miếng'},
+    {item: 'Thịt nạc vai băm', quantity: '200g'},
+    {item: 'Nấm mèo (mộc nhĩ)', quantity: '5g'},
+    {item: 'Hành tây', quantity: '1/4 củ (băm nhỏ)'},
+    {item: 'Hành lá', quantity: '2 nhánh (cắt nhỏ)'},
+    {item: 'Trứng gà', quantity: '1 quả'},
+    {item: 'Cà chua', quantity: '3 quả'},
+    {item: 'Nước mắm', quantity: '1 muỗng canh'},
+    {item: 'Đường', quantity: '1 muỗng canh'},
+    {item: 'Hạt nêm', quantity: '1 muỗng cà phê'},
+    {item: 'Dầu ăn', quantity: 'đủ dùng'}
+  ],
+  instructions: [
+    'Nấm mèo ngâm nở, băm nhỏ. Trộn đều thịt băm với nấm mèo, hành tây, hành lá, trứng gà, nước mắm, hạt nêm, tiêu xay để làm nhân.',
+    'Đậu hũ chiên cắt làm đôi hoặc khoét rỗng ở giữa. Nhồi nhân thịt vào từng miếng đậu hũ.',
+    'Đun nóng dầu ăn, cho đậu hũ nhồi thịt vào chiên sơ hai mặt cho nhân chín và đậu hũ vàng đều.',
+    'Làm sốt cà chua: Cà chua rửa sạch, băm nhỏ hoặc xay nhuyễn. Phi thơm tỏi băm, cho cà chua vào xào chín. Nêm nước mắm, đường, hạt nêm vừa ăn, thêm chút nước lọc.',
+    'Cho đậu hũ đã chiên vào nồi sốt cà, đun nhỏ lửa khoảng 15-20 phút cho đậu hũ thấm sốt. Thi thoảng lật đều để cả hai mặt thấm.',
+    'Rắc hành lá. Dùng nóng với cơm trắng.'
+  ]
+},
+{
+  id:15,
+  name:'Đậu hũ chiên sả ớt',
+  cat:'man',
+  desc:'Đậu hũ chiên giòn rim sả ớt mặn ngọt',
+  prep_time: '10 phút',
+  cook_time: '20 phút',
+  difficulty: 'dễ',
+  servings: '3 người',
+  ingredients: [
+    {item: 'Đậu hũ trắng', quantity: '3 bìa'},
+    {item: 'Sả băm', quantity: '2 muỗng canh'},
+    {item: 'Ớt tươi băm', quantity: '1 muỗng cà phê'},
+    {item: 'Tỏi băm', quantity: '1 muỗng canh'},
+    {item: 'Nước mắm', quantity: '2 muỗng canh'},
+    {item: 'Đường', quantity: '1.5 muỗng canh'},
+    {item: 'Nước lọc', quantity: '50ml'},
+    {item: 'Dầu ăn', quantity: 'đủ chiên'}
+  ],
+  instructions: [
+    'Đậu hũ cắt miếng vừa ăn, thấm khô nước. Chiên đậu hũ vàng giòn các mặt, vớt ra để ráo dầu.',
+    'Phi thơm sả, ớt, tỏi băm với ít dầu ăn. Khi sả vàng thơm, cho nước mắm, đường, nước lọc vào, đun sôi để tạo sốt.',
+    'Cho đậu hũ đã chiên vào chảo sốt, đảo đều cho đậu hũ thấm gia vị.',
+    'Rim trên lửa nhỏ đến khi nước sốt cạn và bám đều vào miếng đậu hũ. Nêm nếm lại cho vừa ăn.',
+    'Dùng nóng với cơm trắng.'
+  ]
+},
 {id:16,name:'Trứng chiên thịt băm',cat:'man',desc:'Trứng đánh với thịt băm, chiên vàng'},
 {id:17,name:'Trứng kho tiêu',cat:'man',desc:'Trứng luộc lột vỏ, kho nước mắm tiêu'},
 {id:18,name:'Cá thu chiên sốt cà',cat:'man',desc:'Cá thu chiên giòn, sốt cà chua đậm đà'},
@@ -469,7 +1002,7 @@ function renderMenu(title,daysArray,isWeek=false){
   const el=document.getElementById('results');
   if(!daysArray.length){el.innerHTML='<div class="menu-card fade-up"><p style="color:#7f6b5e">Chưa có món.</p></div>';return}
   const dh=daysArray.map((day,idx)=>{
-    const items=day.dishes.map(d=>`<div class="dish-row"><span class="dish-cat ${catClass[d.cat]}">${catLabel[d.cat]}</span><div><div class="dish-name">${d.name}</div><div class="dish-desc">${d.desc}</div></div></div>`).join('');
+    const items=day.dishes.map(d=>`<div class="dish-row" onclick="showRecipeDetail(${d.id})"><span class="dish-cat ${catClass[d.cat]}">${catLabel[d.cat]}</span><div><div class="dish-name">${d.name}</div><div class="dish-desc">${d.desc}</div></div></div>`).join('');
     return `<div class="${isWeek?'week-day':''}">${isWeek?`<div class="menu-day-title">📅 ${day.label}</div>`:''}<div class="menu-grid">${items}</div></div>`;
   }).join('');
   const rb=isWeek?'<button class="btn btn-outline" onclick="genWeek()">🔄 Lại tuần khác</button>':'<button class="btn btn-outline" onclick="genDay()">🔄 Lại món khác</button>';
@@ -499,7 +1032,7 @@ function renderPage(){
   if(currentPage>totalPages)currentPage=totalPages||1;
   const start=(currentPage-1)*PAGE_SIZE,end=Math.min(start+PAGE_SIZE,f.length);
   const page=f.slice(start,end);
-  const html=page.map(d=>`<div class="browse-item"><span class="browse-dot" style="background:${catDot[d.cat]}"></span><span>${d.name}</span></div>`).join('');
+  const html=page.map(d=>`<div class="browse-item" onclick="showRecipeDetail(${d.id})"><span class="browse-dot" style="background:${catDot[d.cat]}"></span><span style="flex:1">${d.name}</span><span class="btn-outline" style="padding:2px 8px;font-size:.7rem;border-radius:6px;cursor:pointer" onclick="event.stopPropagation();addToShoppingList(${d.id})">+🛒</span></div>`).join('');
   const pagination=$pagination(totalPages);
   const el=document.getElementById('results');
   el.innerHTML=`<div class="menu-card fade-up"><h2>📖 Tất cả món ăn ${lastFilter?'('+catLabel[lastFilter]+')':''}</h2><p style="font-size:.85rem;color:#7f6b5e;margin-bottom:12px">${f.length} món · trang ${currentPage}/${totalPages}</p><div class="browse-grid">${html}</div>${pagination}</div>`;
@@ -545,7 +1078,7 @@ function renderSearchResults(){
   if(currentPage>totalPages)currentPage=totalPages||1;
   const start=(currentPage-1)*PAGE_SIZE,end=Math.min(start+PAGE_SIZE,f.length);
   const page=f.slice(start,end);
-  const html=page.map(d=>`<div class="dish-row"><span class="dish-cat ${catClass[d.cat]}">${catLabel[d.cat]}</span><div><div class="dish-name">${d.name}</div><div class="dish-desc">${d.desc}</div></div></div>`).join('');
+  const html=page.map(d=>`<div class="dish-row" onclick="showRecipeDetail(${d.id})"><span class="dish-cat ${catClass[d.cat]}">${catLabel[d.cat]}</span><div><div class="dish-name">${d.name}</div><div class="dish-desc">${d.desc}</div></div></div>`).join('');
   const pagination=$pagination(totalPages);
   document.getElementById('results').innerHTML=`<div class="menu-card fade-up"><h2>🔍 Kết quả tìm "${searchQuery}"</h2><p style="font-size:.85rem;color:#7f6b5e;margin-bottom:12px">${f.length} món · trang ${currentPage}/${totalPages}</p><div class="menu-grid">${html}</div>${pagination}</div>`;
 }
@@ -565,9 +1098,11 @@ goPage=function(n){
 
 // ── Tabs ──
 function switchTab(tab){
-  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',(tab==='menu'&&i===0)||(tab==='suggest'&&i===1)||(tab==='feature'&&i===2)));
+  const tabMap={menu:0,suggest:1,feature:2,shoppingList:3};
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===tabMap[tab]));
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
   document.getElementById('tab-'+tab).classList.add('active');
+  if(tab==='shoppingList')renderShoppingList();
 }
 
 // ── Submit Forms ──
@@ -616,6 +1151,214 @@ function setFilter(key){
   if(q){searchDishes(q);return}
   showAll(key||null);
 }
+let currentRecipe = null;
+let currentStep = 0;
+let timerInterval = null;
+let timerSeconds = 0;
+
+// ── Shopping List ──
+function getShoppingList(){try{return JSON.parse(localStorage.getItem('combonau_shopping')||'[]')}catch{return[]}}
+function saveShoppingList(list){localStorage.setItem('combonau_shopping',JSON.stringify(list))}
+
+function renderShoppingList(){
+  const list=getShoppingList();
+  const el=document.getElementById('shoppingListItems');
+  if(!el)return;
+  if(!list.length){el.innerHTML='<li style="padding:20px 0;text-align:center;color:#b8a99a;font-size:.9rem">Chưa có món nào trong danh sách đi chợ. Thêm món từ thực đơn nhé!</li>';return}
+  el.innerHTML=list.map((item,i)=>{
+    const checked=item.checked?'text-decoration:line-through;opacity:.6':'';
+    return `<li style="display:flex;align-items:center;gap:10px;padding:8px 12px;background:#faf7f2;border-radius:10px;margin-bottom:6px;${checked}" onclick="toggleShoppingItem(${i})">
+      <span style="cursor:pointer;font-size:1.1rem;flex-shrink:0">${item.checked?'✅':'⬜'}</span>
+      <span style="flex:1;font-size:.9rem;font-weight:500">${item.name}</span>
+      ${item.quantity?`<span style="font-size:.8rem;color:#7f6b5e;font-weight:600">${item.quantity}</span>`:''}
+    </li>`;
+  }).join('');
+}
+
+function addToShoppingList(dishId){
+  const dish=dishes.find(d=>d.id===dishId);
+  if(!dish||!dish.ingredients)return showToast('Món này chưa có nguyên liệu để thêm vào danh sách.');
+  let list=getShoppingList();
+  dish.ingredients.forEach(ing=>{
+    if(!list.some(item=>item.name===ing.item)){
+      list.push({name:ing.item,quantity:ing.quantity,checked:false});
+    }
+  });
+  saveShoppingList(list);
+  showToast('✅ Đã thêm nguyên liệu vào danh sách đi chợ!');
+}
+
+function toggleShoppingItem(index){
+  const list=getShoppingList();
+  if(list[index]){list[index].checked=!list[index].checked;saveShoppingList(list);renderShoppingList()}
+}
+
+function addManualIngredient(){
+  const name=document.getElementById('manualIngredientName').value.trim();
+  const qty=document.getElementById('manualIngredientQuantity').value.trim();
+  const unit=document.getElementById('manualIngredientUnit').value.trim();
+  if(!name)return showToast('Nhập tên nguyên liệu.');
+  let list=getShoppingList();
+  list.push({name:unit?`${name} (${unit})`:name,quantity:qty||'',checked:false});
+  saveShoppingList(list);
+  renderShoppingList();
+  document.getElementById('manualIngredientName').value='';
+  document.getElementById('manualIngredientQuantity').value='1';
+  document.getElementById('manualIngredientUnit').value='v';
+  showToast('✅ Đã thêm!');
+}
+
+function clearCheckedShoppingList(){
+  let list=getShoppingList().filter(item=>!item.checked);
+  saveShoppingList(list);renderShoppingList();
+  showToast('Đã xóa mục đã mua.');
+}
+
+function clearAllShoppingList(){
+  if(!confirm('Xóa toàn bộ danh sách đi chợ?'))return;
+  saveShoppingList([]);renderShoppingList();
+  showToast('Đã xóa tất cả.');
+}
+
+function copyShoppingList(){
+  const list=getShoppingList();
+  if(!list.length)return showToast('Danh sách trống.');
+  const text=list.map(item=>`${item.checked?'[x]':'[ ]'} ${item.name}${item.quantity?' — '+item.quantity:''}`).join('\n');
+  navigator.clipboard.writeText(text).then(()=>showToast('📋 Đã copy!')).catch(()=>{
+    const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('📋 Đã copy!')
+  });
+}
+
+function showRecipeDetail(id) {
+  const recipe = dishes.find(d => d.id === id);
+  if (!recipe || !recipe.ingredients || !recipe.instructions) {
+    showToast('Chưa có công thức chi tiết cho món này.');
+    return;
+  }
+
+  currentRecipe = recipe;
+  document.getElementById('recipe-name').textContent = recipe.name;
+  document.getElementById('recipe-desc').textContent = recipe.desc;
+
+  // Recipe summary
+  document.getElementById('rcp-prep-time-span').style.display = recipe.prep_time ? 'inline' : 'none';
+  document.getElementById('recipe-prep-time').textContent = recipe.prep_time || '';
+  document.getElementById('rcp-cook-time-span').style.display = recipe.cook_time ? 'inline' : 'none';
+  document.getElementById('recipe-cook-time').textContent = recipe.cook_time || '';
+  document.getElementById('rcp-difficulty-span').style.display = recipe.difficulty ? 'inline' : 'none';
+  document.getElementById('recipe-difficulty').textContent = recipe.difficulty || '';
+  document.getElementById('rcp-servings-span').style.display = recipe.servings ? 'inline' : 'none';
+  document.getElementById('recipe-servings').textContent = recipe.servings || '';
+
+  // Ingredients
+  const ingredientsList = document.getElementById('recipe-ingredients');
+  ingredientsList.innerHTML = '';
+  recipe.ingredients.forEach(item => {
+    const li = document.createElement('li');
+    li.textContent = `${item.item}: ${item.quantity}`;
+    ingredientsList.appendChild(li);
+  });
+
+  // Instructions
+  const instructionsList = document.getElementById('recipe-instructions');
+  instructionsList.innerHTML = '';
+  recipe.instructions.forEach(step => {
+    const li = document.createElement('li');
+    li.textContent = step;
+    instructionsList.appendChild(li);
+  });
+
+  document.getElementById('recipe-modal').classList.add('show');
+  document.body.style.overflow = 'hidden'; // Prevent scrolling body when modal is open
+}
+
+function closeRecipeModal() {
+  document.getElementById('recipe-modal').classList.remove('show');
+  document.body.style.overflow = '';
+  currentRecipe = null;
+  stopTimer();
+}
+
+function enterCookMode() {
+  if (!currentRecipe) return;
+  document.getElementById('recipe-modal').classList.remove('show');
+  document.getElementById('cook-mode').classList.add('show');
+  document.getElementById('cook-mode-recipe-name').textContent = currentRecipe.name;
+  currentStep = 0;
+  renderCookModeStep();
+}
+
+function exitCookMode() {
+  document.getElementById('cook-mode').classList.remove('show');
+  document.body.style.overflow = '';
+  stopTimer();
+}
+
+function renderCookModeStep() {
+  if (!currentRecipe || !currentRecipe.instructions) return;
+  const totalSteps = currentRecipe.instructions.length;
+  document.getElementById('current-step-num').textContent = currentStep + 1;
+  document.getElementById('total-steps-num').textContent = totalSteps;
+  document.getElementById('cook-mode-current-step').textContent = currentRecipe.instructions[currentStep];
+
+  document.getElementById('prev-step-button').disabled = currentStep === 0;
+  document.getElementById('next-step-button').disabled = currentStep === totalSteps - 1;
+}
+
+function prevStep() {
+  if (currentStep > 0) {
+    currentStep--;
+    renderCookModeStep();
+  }
+  stopTimer();
+}
+
+function nextStep() {
+  if (currentRecipe && currentStep < currentRecipe.instructions.length - 1) {
+    currentStep++;
+    renderCookModeStep();
+  }
+  stopTimer();
+}
+
+function toggleTimer() {
+  if (timerInterval) {
+    stopTimer();
+    document.getElementById('timer-button').textContent = '⏰ Bắt đầu hẹn giờ';
+  } else {
+    const input = prompt('Đặt hẹn giờ (phút):', '5');
+    if (input === null || isNaN(input) || input <= 0) return;
+    timerSeconds = parseInt(input) * 60;
+    startTimer();
+    document.getElementById('timer-button').textContent = '⏸️ Tạm dừng hẹn giờ';
+  }
+}
+
+function startTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  const timerDisplay = document.getElementById('countdown-timer');
+  timerInterval = setInterval(() => {
+    const minutes = String(Math.floor(timerSeconds / 60)).padStart(2, '0');
+    const seconds = String(timerSeconds % 60).padStart(2, '0');
+    timerDisplay.textContent = `${minutes}:${seconds}`;
+    if (timerSeconds <= 0) {
+      stopTimer();
+      timerDisplay.textContent = '00:00';
+      showToast('🔔 Hết giờ!');
+      document.getElementById('timer-button').textContent = '⏰ Bắt đầu hẹn giờ';
+    } else {
+      timerSeconds--;
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  timerSeconds = 0;
+  document.getElementById('countdown-timer').textContent = '00:00';
+}
+
 initUI();
 showAll();
 </script>
