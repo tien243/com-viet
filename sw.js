@@ -1,5 +1,5 @@
 
-const CACHE_NAME = 'combonau-cache-v1';
+const CACHE_NAME = 'combonau-cache-v2';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -57,10 +57,8 @@ self.addEventListener('fetch', (event) => {
             return networkResponse;
           })
           .catch(() => {
-            // If both cache and network fail, you can serve an offline page
-            // For a single-file site, the cached '/' or '/index.html' IS the offline page.
-            // So this catch block might not be strictly necessary if '/' is always cached.
-            // But good practice for other assets.
+            // If both cache and network fail, serve the offline page (index.html)
+            return caches.match('/index.html');
           });
       })
   );

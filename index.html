@@ -40,14 +40,15 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#faf7f2;c
 .container{max-width:800px;margin:0 auto;padding:0 20px}
 header{text-align:center;padding:20px 0 14px;position:relative}
 .avatar-wrap{margin-bottom:4px;display:flex;justify-content:center}
-.avatar-wrap svg{width:72px;height:72px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.1))}
-header h1{font-size:1.8rem;font-weight:800;color:#2c2420;letter-spacing:-.5px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}
+.avatar-wrap svg{width:48px;height:48px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.1))}
+header h1{font-size:1.3rem;font-weight:800;color:#2c2420;letter-spacing:-.5px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}
 header h1 .tag-red{color:#c0392b}
 header p{color:#7f6b5e;font-size:.88rem;margin-top:4px;font-weight:500}
 .stats{display:flex;justify-content:center;gap:8px;margin:6px 0 16px;flex-wrap:wrap}
 .stat-item{background:#fff;padding:8px 18px;border-radius:20px;font-size:.85rem;font-weight:600;color:#5a4a40;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .stat-item .num{color:#c0392b}
-.hero-actions{display:flex;gap:10px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}
+.hero-actions{display:flex;gap:10px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}.hero-actions .btn{flex:1;padding:15px 20px;font-size:1rem;}
+@media(max-width:500px){.hero-actions{flex-direction:column;margin-bottom:10px;}.hero-actions .btn{width:100%}}
 .btn{padding:12px 24px;border:none;border-radius:12px;font-size:.93rem;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
 .btn:active{transform:scale(.97)}
 .btn-primary{background:#c0392b;color:#fff;box-shadow:0 4px 14px rgba(192,57,43,.3)}
@@ -57,39 +58,40 @@ header p{color:#7f6b5e;font-size:.88rem;margin-top:4px;font-weight:500}
 .btn-outline{background:transparent;color:#7f6b5e;border:2px solid #d5c8bd;padding:10px 18px;font-size:.88rem;border-radius:10px}
 .btn-outline:hover{border-color:#c0392b;color:#c0392b}
 .btn-sm{padding:10px 18px;font-size:.88rem}
-.difficulty-badge{display:inline-flex;align-items:center;gap:2px;font-size:.7rem;padding:2px 8px;border-radius:6px;font-weight:600;white-space:nowrap}
+.add-to-cart-btn{padding:3px 6px;font-size:.7rem;}
+.difficulty-badge{display:inline-flex;align-items:center;gap:2px;font-size:.65rem;padding:2px 8px;border-radius:6px;font-weight:600;white-space:nowrap}
 .difficulty-easy{background:#e8f5e9;color:#2e7d32}
 .difficulty-medium{background:#fff3e0;color:#e65100}
 .difficulty-hard{background:#fee9e7;color:#c0392b}
-.time-badge{display:inline-flex;align-items:center;gap:2px;font-size:.7rem;padding:2px 8px;border-radius:6px;font-weight:600;white-space:nowrap;background:#e3f2fd;color:#1565c0}
+.time-badge{display:inline-flex;align-items:center;gap:2px;font-size:.65rem;padding:2px 8px;border-radius:6px;font-weight:600;white-space:nowrap;background:#e3f2fd;color:#1565c0}
 .filter-row{margin-bottom:10px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
 .filter-chip-sm{padding:4px 12px;border-radius:20px;border:1.5px solid #d5c8bd;background:transparent;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;color:#7f6b5e;font-family:inherit}
 .filter-chip-sm:hover{border-color:#c0392b;color:#c0392b}
 .filter-chip-sm.active{background:#c0392b;border-color:#c0392b;color:#fff}
 .share-btn{cursor:pointer;opacity:.7;transition:opacity .2s;padding:4px}
 .share-btn:hover{opacity:1}
-.filters{display:flex;gap:6px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
-.filter-chip{padding:6px 16px;border-radius:24px;border:2px solid #d5c8bd;background:transparent;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s;color:#5a4a40;font-family:inherit}
+.filters{display:flex;gap:4px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
+.filter-chip{padding:4px 10px;border-radius:20px;border:1.5px solid #d5c8bd;background:transparent;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;color:#5a4a40;font-family:inherit}
 .filter-chip:hover{border-color:#c0392b}
 .filter-chip.active{background:#c0392b;border-color:#c0392b;color:#fff}
 .tabs{display:flex;gap:0;margin-bottom:20px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid #eee}
-.tab-btn{flex:1;padding:10px;border:none;background:transparent;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;color:#7f6b5e}
+.tab-btn{flex:1;padding:8px;border:none;background:transparent;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;color:#7f6b5e}
 .tab-btn:hover{background:#faf7f2}
 .tab-btn.active{background:#c0392b;color:#fff}
 .tab-content{display:none}
 .tab-content.active{display:block}
-.search-wrap{position:relative;margin-bottom:16px;display:flex;gap:8px}
-.search-input{flex:1;padding:10px 14px 10px 38px;border:2px solid #d5c8bd;border-radius:12px;font-size:.9rem;font-family:inherit;background:#fff;transition:border-color .2s;outline:none}
+.search-wrap{position:relative;margin-bottom:10px;display:flex;gap:6px;flex-wrap:wrap}
+.search-input{flex:1;padding:8px 12px 8px 34px;border:2px solid #d5c8bd;border-radius:10px;font-size:.85rem;font-family:inherit;background:#fff;transition:border-color .2s;outline:none}
 .search-input:focus{border-color:#c0392b}
-.search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:1rem;opacity:.6}
-.diff-select{padding:10px 12px;border:2px solid #d5c8bd;border-radius:12px;font-size:.82rem;font-family:inherit;background:#fff;color:#5a4a40;font-weight:600;cursor:pointer;transition:border-color .2s;outline:none;min-width:140px}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:.9rem;opacity:.6}
+.diff-select{padding:8px 10px;border:2px solid #d5c8bd;border-radius:10px;font-size:.85rem;font-family:inherit;background:#fff;color:#5a4a40;font-weight:600;cursor:pointer;transition:border-color .2s;outline:none;min-width:120px}
 .diff-select:focus{border-color:#c0392b}
 .results-area{min-height:200px}
 .menu-card{background:#fff;border-radius:16px;padding:20px 18px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:16px}
 .menu-card h2{font-size:1.1rem;font-weight:700;margin-bottom:10px;color:#2c2420}
 .menu-day-title{font-size:.9rem;font-weight:700;color:#c0392b;margin-bottom:6px}
 .menu-grid{display:flex;flex-direction:column;gap:6px}
-.dish-row{display:flex;align-items:baseline;gap:8px;padding:7px 12px;background:#faf7f2;border-radius:10px;transition:background .2s}
+.dish-row{display:flex;align-items:baseline;gap:6px;padding:6px 10px;background:#faf7f2;border-radius:8px;transition:background .2s}
 .dish-row:hover{background:#f0eae2}
 .dish-cat{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:2px 10px;border-radius:8px;white-space:nowrap;flex-shrink:0}
 .cat-man{background:#fee9e7;color:#c0392b}
@@ -102,8 +104,8 @@ header p{color:#7f6b5e;font-size:.88rem;margin-top:4px;font-weight:500}
 .week-day:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
 .menu-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
 .browse-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
-@media(max-width:500px){.browse-grid{grid-template-columns:1fr}}
-.browse-item{padding:8px 12px;background:#fff;border-radius:10px;font-size:.85rem;display:flex;align-items:center;gap:8px}
+@media(max-width:500px){.browse-grid{grid-template-columns:1fr;gap:4px}}
+.browse-item{padding:6px 10px;background:#fff;border-radius:10px;font-size:.85rem;display:flex;align-items:center;gap:8px}
 .browse-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .no-result{padding:30px 0;text-align:center}
 .no-result .icon{font-size:3rem;margin-bottom:12px}
@@ -129,8 +131,8 @@ footer{text-align:center;color:#b8a99a;font-size:.82rem;padding:30px 0 40px}
 .toast.show{opacity:1}
 .modal{display:none;position:fixed;z-index:100;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,.6)}
 .modal.show{display:block}
-.modal-content{background-color:#fefefe;margin:5% auto;padding:30px;border-radius:16px;width:90%;max-width:700px;box-shadow:0 5px 15px rgba(0,0,0,.3);position:relative}
-.modal-content h2{font-size:1.6rem;color:#c0392b;margin-bottom:12px}
+.modal-content{background-color:#fefefe;margin:5% auto;padding:16px;border-radius:16px;width:90%;max-width:700px;box-shadow:0 5px 15px rgba(0,0,0,.3);position:relative}
+.modal-content h2{font-size:1.2rem;color:#c0392b;margin-bottom:12px}
 .modal-content h3{font-size:1.2rem;color:#2c2420;margin-top:20px;margin-bottom:10px;border-bottom:1px solid #eee;padding-bottom:5px}
 .modal-content p{font-size:.95rem;color:#5a4a40;line-height:1.5}
 .modal-content ul,.modal-content ol{margin-left:20px;margin-bottom:15px;color:#5a4a40;font-size:.9rem}
@@ -151,7 +153,7 @@ footer{text-align:center;color:#b8a99a;font-size:.82rem;padding:30px 0 40px}
 .cook-mode-step-indicator span{font-weight:bold;color:#c0392b}
 .cook-mode-step-text{font-size:2.2rem;line-height:1.4;margin:40px auto;max-width:800px;flex-grow:1;display:flex;align-items:center;justify-content:center}
 .cook-mode-navigation{display:flex;justify-content:space-around;width:100%;max-width:500px;margin-bottom:20px}
-.cook-mode-navigation .btn{padding:15px 30px;font-size:1.1rem;flex-grow:1;margin:0 10px}
+.cook-mode-navigation .btn{padding:10px 20px;font-size:1rem;flex-grow:1;margin:0 8px}
 .cook-mode-timer-section{margin-top:30px;margin-bottom:40px;display:flex;flex-direction:column;align-items:center;gap:15px}
 #countdown-timer{font-size:4rem;font-weight:bold;color:#c0392b;font-variant-numeric:tabular-nums}
 #timer-button{padding:12px 25px;font-size:1rem}
@@ -172,29 +174,48 @@ footer{text-align:center;color:#b8a99a;font-size:.82rem;padding:30px 0 40px}
     });
   }
 </script>
+<!-- Schema.org JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "name": "Cơm Bố Nấu",
+      "url": "https://combonau.com",
+      "description": "Thực đơn cho bố vào bếp — 305 món ăn gia đình Việt Nam đơn giản, nhanh gọn"
+    },
+    {
+      "@type": "Organization",
+      "name": "Cơm Bố Nấu",
+      "url": "https://combonau.com"
+    }
+  ]
+}
+</script>
 </head>
 <body>
 <div class="container">
 <header>
   <div class="avatar-wrap"><svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="30" y="80" width="60" height="40" rx="8" fill="#4A90D9"/><circle cx="60" cy="48" r="34" fill="#F5D0B0"/><path d="M26 42C26 24 38 16 60 16s34 8 34 26-6 12-6-4c0-16-12-20-28-20S26 22 26 42z" fill="#3D2B1F"/><ellipse cx="48" cy="48" rx="5" ry="6" fill="#fff"/><ellipse cx="72" cy="48" rx="5" ry="6" fill="#fff"/><circle cx="48" cy="48" r="3" fill="#2c2420"/><circle cx="72" cy="48" r="3" fill="#2c2420"/><rect x="38" y="41" width="22" height="16" rx="4" stroke="#3D2B1F" stroke-width="2.5" fill="none"/><rect x="60" y="41" width="22" height="16" rx="4" stroke="#3D2B1F" stroke-width="2.5" fill="none"/><line x1="60" y1="48" x2="60" y2="48" stroke="#3D2B1F" stroke-width="2.5"/><line x1="35" y1="48" x2="38" y2="48" stroke="#3D2B1F" stroke-width="2.5"/><line x1="82" y1="48" x2="85" y2="48" stroke="#3D2B1F" stroke-width="2.5"/><path d="M50 58C54 64 66 64 70 58" stroke="#2c2420" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M45 84L48 90l12 2 12-2 3-6z" fill="#c0392b" opacity=".7"/></svg></div>
   <h1><span class="tag-red">Cơm</span> Bố Nấu</h1>
-  <p>Thực đơn cho bố — bấm phát vào bếp liền</p>
+    <p>Món ngon cho bố bận rộn</p>
 </header>
 <div class="hero-actions">
   <button class="btn btn-primary" onclick="genDay()">🎲 Thực đơn hôm nay</button>
   <button class="btn btn-secondary" onclick="genWeek()">📅 Thực đơn cả tuần</button>
 </div>
 <div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('menu')">📖 Thực đơn</button>
-  <button class="tab-btn" onclick="switchTab('suggest')">🍽️ Góp ý món</button>
-  <button class="tab-btn" onclick="switchTab('feature')">💡 Đề xuất</button>
-  <button class="tab-btn" onclick="switchTab('shoppingList')">🛒 Danh sách đi chợ</button>
+  <button class="tab-btn active" onclick="switchTab('menu')">Món ăn</button>
+  <button class="tab-btn" onclick="switchTab('suggest')">Góp ý</button>
+  <button class="tab-btn" onclick="switchTab('feature')">Đề xuất</button>
+  <button class="tab-btn" onclick="switchTab('shoppingList')">Đi chợ</button>
 </div>
 <div class="tab-content active" id="tab-menu">
   <div class="filters" id="filters" data-active=""></div>
   <div class="search-wrap">
     <span class="search-icon">🔍</span>
-    <input class="search-input" id="searchInput" type="text" placeholder="Tìm món ăn..." oninput="searchDishes(this.value)" autocomplete="off">
+    <input class="search-input" id="searchInput" type="text" placeholder="Tìm món..." oninput="searchDishes(this.value)" autocomplete="off">
     <select class="diff-select" id="diffSelect" onchange="setDifficultyFilter(this.value)">
       <option value="">⏱️ Tất cả</option>
       <option value="quick">⚡ Nhanh (&lt;45ph)</option>
@@ -3534,8 +3555,9 @@ function shuffle(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=Math.fl
 function pick(a,n){const s=shuffle(a);return s.slice(0,Math.min(n,s.length))}
 function formatDate(d=0){const x=new Date();x.setDate(x.getDate()+d);const dd=String(x.getDate()).padStart(2,'0'),mm=String(x.getMonth()+1).padStart(2,'0'),da=['CN','T2','T3','T4','T5','T6','T7'];return `${da[x.getDay()]}, ${dd}/${mm}`}
 function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._hide);t._hide=setTimeout(()=>t.classList.remove('show'),2200)}
-function copyMenu(){const el=document.getElementById('results'),t=el.innerText.trim();if(!t)return;navigator.clipboard.writeText(t).then(()=>showToast('📋 Đã copy!')).catch(()=>{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('📋 Đã copy!')})}
+function copyMenu(){gtag('event', 'copy_menu');const el=document.getElementById('results'),t=el.innerText.trim();if(!t)return;navigator.clipboard.writeText(t).then(()=>showToast('📋 Đã copy!')).catch(()=>{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);showToast('📋 Đã copy!')})}
 function shareMenu(){
+  gtag('event', 'share_menu');
   const el=document.getElementById('results'),t=el.innerText.trim();
   if(!t)return;
   const text=`🍽️ Cơm Bố Nấu — Thực đơn hôm nay\n\n${t}\n\nXem thêm tại: https://combonau.com`;
@@ -3558,10 +3580,12 @@ function renderMenu(title,daysArray,isWeek=false){
 }
 
 function genDay(){
+  gtag('event', 'generate_menu', {type: 'day'});
   const o=[pick(dishes.filter(d=>d.cat==='man'),1)[0],pick(dishes.filter(d=>d.cat==='canh'),1)[0],pick(dishes.filter(d=>d.cat==='rau'),1)[0]].filter(Boolean);
   renderMenu('🍽️ Thực đơn hôm nay',[{label:formatDate(),dishes:o}],false);
 }
 function genWeek(){
+  gtag('event', 'generate_menu', {type: 'week'});
   const days=[];for(let i=0;i<7;i++){days.push({label:formatDate(i),dishes:[pick(dishes.filter(d=>d.cat==='man'),1)[0],pick(dishes.filter(d=>d.cat==='canh'),1)[0],pick(dishes.filter(d=>d.cat==='rau'),1)[0]].filter(Boolean)})}
   renderMenu('📅 Thực đơn cả tuần',days,true);
 }
@@ -3621,6 +3645,7 @@ function searchDishes(query){
     if(!q){applyFilters();return}
     const hits=pool.filter(d=>d.name.toLowerCase().includes(q)||d.desc.toLowerCase().includes(q));
     if(hits.length){
+      gtag('event', 'search', {query: q});
       searchResults=hits;currentPage=1;
       renderSearchResults();
     } else {
@@ -3654,6 +3679,7 @@ goPage=function(n){
 
 // ── Tabs ──
 function switchTab(tab){
+  gtag('event', 'switch_tab', {tab: tab});
   const tabMap={menu:0,suggest:1,feature:2,shoppingList:3};
   document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===tabMap[tab]));
   document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
@@ -3663,6 +3689,7 @@ function switchTab(tab){
 
 // ── Submit Forms ──
 async function submitDish(e){
+  gtag('event', 'suggest_dish');
   e.preventDefault();
   const btn=e.target.querySelector('button[type=submit]');
   btn.disabled=true;btn.textContent='⏳ Đang gửi...';
@@ -3676,6 +3703,7 @@ async function submitDish(e){
   btn.disabled=false;btn.textContent='📤 Gửi góp ý';
 }
 async function submitFeature(e){
+  gtag('event', 'suggest_feature');
   e.preventDefault();
   const btn=e.target.querySelector('button[type=submit]');
   btn.disabled=true;btn.textContent='⏳ Đang gửi...';
@@ -3701,6 +3729,7 @@ function initUI(){
 }
 let currentFilter='';
 function setDifficultyFilter(val){
+  gtag('event', 'filter', {filter_type: 'difficulty', value: val});
   const sel=document.getElementById('diffSelect');
   if(sel)sel.value=val;
   applyFilters();
@@ -3760,6 +3789,7 @@ function renderShoppingList(){
 }
 
 function addToShoppingList(dishId){
+  gtag('event', 'add_shopping_list');
   const dish=dishes.find(d=>d.id===dishId);
   if(!dish||!dish.ingredients)return showToast('Món này chưa có nguyên liệu để thêm vào danh sách.');
   let list=getShoppingList();
@@ -3814,6 +3844,7 @@ function copyShoppingList(){
 }
 
 function showRecipeDetail(id) {
+  gtag('event', 'view_recipe', {recipe_id: id});
   const recipe = dishes.find(d => d.id === id);
   if (!recipe || !recipe.ingredients || !recipe.instructions) {
     showToast('Chưa có công thức chi tiết cho món này.');
