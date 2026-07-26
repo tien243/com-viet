@@ -40,6 +40,10 @@ body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#faf7f2;c
 .container{max-width:800px;margin:0 auto;padding:0 16px}
 /* ── Header bar: inline, mini ── */
 .header-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 0 2px;min-height:34px}
+.header-bar .logo-wrap{display:flex;align-items:center;gap:6px}
+.header-bar .logo-wrap .avatar-wrap{display:flex;align-items:center}
+.header-bar .logo-wrap .avatar-wrap svg{width:32px;height:32px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.1));display:block}
+@media(min-width:768px){.header-bar .logo-wrap .avatar-wrap svg{width:52px;height:52px}}
 .header-bar .logo{font-size:.95rem;font-weight:800;color:#2c2420;letter-spacing:-.3px}
 .header-bar .logo .tag-red{color:#c0392b}
 .header-bar .header-actions{display:flex;align-items:center;gap:6px}
@@ -200,7 +204,10 @@ footer{text-align:center;color:#b8a99a;font-size:.82rem;padding:30px 0 40px}
 <div class="container">
 <header>
   <div class="header-bar" id="headerBar">
-    <div class="logo"><span class="tag-red">Cơm</span> Bố Nấu</div>
+    <div class="logo-wrap">
+      <span class="avatar-wrap"><svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="30" y="80" width="60" height="40" rx="8" fill="#4A90D9"/><circle cx="60" cy="48" r="34" fill="#F5D0B0"/><path d="M26 42C26 24 38 16 60 16s34 8 34 26-6 12-6-4c0-16-12-20-28-20S26 22 26 42z" fill="#3D2B1F"/><ellipse cx="48" cy="48" rx="5" ry="6" fill="#fff"/><ellipse cx="72" cy="48" rx="5" ry="6" fill="#fff"/><circle cx="48" cy="48" r="3" fill="#2c2420"/><circle cx="72" cy="48" r="3" fill="#2c2420"/><rect x="38" y="41" width="22" height="16" rx="4" stroke="#3D2B1F" stroke-width="2.5" fill="none"/><rect x="60" y="41" width="22" height="16" rx="4" stroke="#3D2B1F" stroke-width="2.5" fill="none"/><line x1="60" y1="48" x2="60" y2="48" stroke="#3D2B1F" stroke-width="2.5"/><line x1="35" y1="48" x2="38" y2="48" stroke="#3D2B1F" stroke-width="2.5"/><line x1="82" y1="48" x2="85" y2="48" stroke="#3D2B1F" stroke-width="2.5"/><path d="M50 58C54 64 66 64 70 58" stroke="#2c2420" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M45 84L48 90l12 2 12-2 3-6z" fill="#c0392b" opacity=".7"/></svg></span>
+      <div class="logo"><span class="tag-red">Cơm</span> Bố Nấu</div>
+    </div>
     <div class="header-actions">
       <button onclick="toggleSearch()" aria-label="Tìm món" id="searchToggle">🔍</button>
       <span class="menu-wrap">
@@ -235,9 +242,6 @@ footer{text-align:center;color:#b8a99a;font-size:.82rem;padding:30px 0 40px}
   <button class="chip" data-key="rau" onclick="setFilter('rau')">🥬 Rau</button>
   <button class="chip" data-key="nhau" onclick="setFilter('nhau')">🍻 Nhậu</button>
   <button class="chip" data-key="quick" onclick="setDiffFilter('quick')">⚡ Nhanh</button>
-  <button class="chip" data-key="easy" onclick="setDiffFilter('easy')">🌶️ Dễ</button>
-  <button class="chip" data-key="medium" onclick="setDiffFilter('medium')">🌶️🌶️ TB</button>
-  <button class="chip" data-key="hard" onclick="setDiffFilter('hard')">🌶️🌶️🌶️ Khó</button>
 </div>
 <div class="tab-content active" id="tab-menu">
   <div class="results-area" id="results"></div>
