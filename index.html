@@ -3565,7 +3565,7 @@ const catLabel={man:'Món mặn',canh:'Món canh',rau:'Món rau',nhau:'Mồi bé
 const catClass={man:'cat-man',canh:'cat-canh',rau:'cat-rau',nhau:'cat-nhau',khac:'cat-man'};
 const catDot={man:'#c0392b',canh:'#00897b',rau:'#388e3c',nhau:'#e67e22',khac:'#c0392b'};
 const diffLabel={easy:'Dễ',medium:'TB',hard:'Khó'};
-function diffBadge(d){if(!d)return'';const cls=d==='easy'?'difficulty-easy':d==='medium'?'difficulty-medium':'difficulty-hard';return`<span class="difficulty-badge ${cls}">🌶️ ${diffLabel[d]||d}</span>`}
+function diffBadge(d){return''}
 function timeBadge(t){if(!t)return'';return`<span class="time-badge">⏱️ ${t}</span>`}
 function hasRecipe(d){return d&&d.ingredients&&d.instructions}
 function totalMinsFromCookTime(t){if(!t)return 999;const m=t.match(/(\d+)\s*phút/);if(m)return parseInt(m[1]);const h=t.match(/(\d+)\s*tiếng/);if(h){const hm=t.match(/(\d+)\s*phút/);return parseInt(h[1])*60+(hm?parseInt(hm[1]):0)}return 999}
