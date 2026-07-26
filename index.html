@@ -37,55 +37,57 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;scroll-behavior:smooth}
 body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:#faf7f2;color:#2c2420;min-height:100vh}
-.container{max-width:800px;margin:0 auto;padding:0 20px}
-header{text-align:center;padding:20px 0 14px;position:relative}
-.avatar-wrap{margin-bottom:4px;display:flex;justify-content:center}
-.avatar-wrap svg{width:48px;height:48px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.1))}
-header h1{font-size:1.3rem;font-weight:800;color:#2c2420;letter-spacing:-.5px;display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap}
-header h1 .tag-red{color:#c0392b}
-header p{color:#7f6b5e;font-size:.88rem;margin-top:4px;font-weight:500}
-.stats{display:flex;justify-content:center;gap:8px;margin:6px 0 16px;flex-wrap:wrap}
-.stat-item{background:#fff;padding:8px 18px;border-radius:20px;font-size:.85rem;font-weight:600;color:#5a4a40;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.stat-item .num{color:#c0392b}
-.hero-actions{display:flex;gap:10px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}.hero-actions .btn{flex:1;padding:15px 20px;font-size:1rem;}
-@media(max-width:500px){.hero-actions{flex-direction:column;margin-bottom:10px;}.hero-actions .btn{width:100%}}
-.btn{padding:12px 24px;border:none;border-radius:12px;font-size:.93rem;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
+.container{max-width:800px;margin:0 auto;padding:0 16px}
+/* ── Header bar: inline, mini ── */
+.header-bar{display:flex;align-items:center;justify-content:space-between;padding:8px 0 2px;min-height:34px}
+.header-bar .logo{font-size:.95rem;font-weight:800;color:#2c2420;letter-spacing:-.3px}
+.header-bar .logo .tag-red{color:#c0392b}
+.header-bar .header-actions{display:flex;align-items:center;gap:6px}
+.header-bar .header-actions button{background:none;border:none;font-size:1.05rem;cursor:pointer;padding:4px 3px;color:#5a4a40;font-family:inherit;line-height:1}
+.header-bar .header-actions button:hover{color:#c0392b}
+/* ── Hamburger dropdown ── */
+.menu-wrap{position:relative}
+.menu-dropdown{display:none;position:absolute;top:100%;right:0;min-width:150px;background:#fff;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.1);z-index:50;overflow:hidden;border:1px solid #f0eae2}
+.menu-dropdown.show{display:block}
+.menu-dropdown button{display:block;width:100%;padding:10px 14px;border:none;background:transparent;text-align:left;font-size:.82rem;font-weight:600;cursor:pointer;color:#2c2420;font-family:inherit}
+.menu-dropdown button:hover{background:#faf7f2;color:#c0392b}
+.menu-dropdown .menu-divider{height:1px;background:#eee;margin:0}
+/* ── Filter scroll row ── */
+.filter-scroll{overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;white-space:nowrap;padding:4px 0 6px;display:flex;gap:5px;align-items:center}
+.filter-scroll::-webkit-scrollbar{display:none}
+.filter-scroll .chip{display:inline-flex;align-items:center;gap:2px;padding:3px 10px;border-radius:16px;border:1.5px solid #d5c8bd;background:#fff;font-size:.7rem;font-weight:600;cursor:pointer;color:#5a4a40;font-family:inherit;white-space:nowrap;flex-shrink:0;transition:all .12s}
+.filter-scroll .chip:hover{border-color:#c0392b;color:#c0392b}
+.filter-scroll .chip.active{background:#c0392b;border-color:#c0392b;color:#fff}
+/* ── HNAG pill (first in scroll row) ── */
+.hnag-pill{display:inline-flex;align-items:center;gap:3px;padding:3px 12px 3px 10px;border-radius:16px;background:#c0392b;color:#fff;border:none;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;font-family:inherit}
+.hnag-pill:active{transform:scale(.96)}
+/* ── Search overlay ── */
+.search-overlay{display:none;padding:4px 0 8px;gap:6px}
+.search-overlay.show{display:flex}
+.search-overlay input{flex:1;padding:7px 12px;border:2px solid #d5c8bd;border-radius:10px;font-size:.85rem;font-family:inherit;background:#fff;outline:none}
+.search-overlay input:focus{border-color:#c0392b}
+.search-overlay .close-s{background:none;border:none;font-size:1.05rem;cursor:pointer;padding:4px 8px;color:#5a4a40;font-family:inherit}
+/* ── Diff select (hidden, used by JS) ── */
+#diffSelect{display:none}
+/* ── Old classes kept for compat ── */
+.btn{padding:10px 18px;border:none;border-radius:10px;font-size:.88rem;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px;font-family:inherit}
 .btn:active{transform:scale(.97)}
 .btn-primary{background:#c0392b;color:#fff;box-shadow:0 4px 14px rgba(192,57,43,.3)}
 .btn-primary:hover{background:#a93226}
 .btn-secondary{background:#fff;color:#2c2420;border:2px solid #d5c8bd}
 .btn-secondary:hover{border-color:#c0392b;color:#c0392b}
-.btn-outline{background:transparent;color:#7f6b5e;border:2px solid #d5c8bd;padding:10px 18px;font-size:.88rem;border-radius:10px}
+.btn-outline{background:transparent;color:#7f6b5e;border:2px solid #d5c8bd;padding:8px 14px;font-size:.82rem;border-radius:8px}
 .btn-outline:hover{border-color:#c0392b;color:#c0392b}
-.btn-sm{padding:10px 18px;font-size:.88rem}
-.add-to-cart-btn{padding:3px 6px;font-size:.7rem;}
+.btn-sm{padding:8px 14px;font-size:.82rem}
 .difficulty-badge{display:inline-flex;align-items:center;gap:2px;font-size:.65rem;padding:2px 8px;border-radius:6px;font-weight:600;white-space:nowrap}
 .difficulty-easy{background:#e8f5e9;color:#2e7d32}
 .difficulty-medium{background:#fff3e0;color:#e65100}
 .difficulty-hard{background:#fee9e7;color:#c0392b}
 .time-badge{display:inline-flex;align-items:center;gap:2px;font-size:.65rem;padding:2px 8px;border-radius:6px;font-weight:600;white-space:nowrap;background:#e3f2fd;color:#1565c0}
-.filter-row{margin-bottom:10px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
-.filter-chip-sm{padding:4px 12px;border-radius:20px;border:1.5px solid #d5c8bd;background:transparent;font-size:.75rem;font-weight:600;cursor:pointer;transition:all .2s;color:#7f6b5e;font-family:inherit}
-.filter-chip-sm:hover{border-color:#c0392b;color:#c0392b}
-.filter-chip-sm.active{background:#c0392b;border-color:#c0392b;color:#fff}
 .share-btn{cursor:pointer;opacity:.7;transition:opacity .2s;padding:4px}
 .share-btn:hover{opacity:1}
-.filters{display:flex;gap:4px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
-.filter-chip{padding:4px 10px;border-radius:20px;border:1.5px solid #d5c8bd;background:transparent;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s;color:#5a4a40;font-family:inherit}
-.filter-chip:hover{border-color:#c0392b}
-.filter-chip.active{background:#c0392b;border-color:#c0392b;color:#fff}
-.tabs{display:flex;gap:0;margin-bottom:20px;background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);border:1px solid #eee}
-.tab-btn{flex:1;padding:8px;border:none;background:transparent;font-size:.8rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:inherit;color:#7f6b5e}
-.tab-btn:hover{background:#faf7f2}
-.tab-btn.active{background:#c0392b;color:#fff}
 .tab-content{display:none}
 .tab-content.active{display:block}
-.search-wrap{position:relative;margin-bottom:10px;display:flex;gap:6px;flex-wrap:wrap}
-.search-input{flex:1;padding:8px 12px 8px 34px;border:2px solid #d5c8bd;border-radius:10px;font-size:.85rem;font-family:inherit;background:#fff;transition:border-color .2s;outline:none}
-.search-input:focus{border-color:#c0392b}
-.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:.9rem;opacity:.6}
-.diff-select{padding:8px 10px;border:2px solid #d5c8bd;border-radius:10px;font-size:.85rem;font-family:inherit;background:#fff;color:#5a4a40;font-weight:600;cursor:pointer;transition:border-color .2s;outline:none;min-width:120px}
-.diff-select:focus{border-color:#c0392b}
 .results-area{min-height:200px}
 .menu-card{background:#fff;border-radius:16px;padding:20px 18px;box-shadow:0 2px 12px rgba(0,0,0,.06);margin-bottom:16px}
 .menu-card h2{font-size:1.1rem;font-weight:700;margin-bottom:10px;color:#2c2420}
@@ -197,33 +199,47 @@ footer{text-align:center;color:#b8a99a;font-size:.82rem;padding:30px 0 40px}
 <body>
 <div class="container">
 <header>
-  <div class="avatar-wrap"><svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="30" y="80" width="60" height="40" rx="8" fill="#4A90D9"/><circle cx="60" cy="48" r="34" fill="#F5D0B0"/><path d="M26 42C26 24 38 16 60 16s34 8 34 26-6 12-6-4c0-16-12-20-28-20S26 22 26 42z" fill="#3D2B1F"/><ellipse cx="48" cy="48" rx="5" ry="6" fill="#fff"/><ellipse cx="72" cy="48" rx="5" ry="6" fill="#fff"/><circle cx="48" cy="48" r="3" fill="#2c2420"/><circle cx="72" cy="48" r="3" fill="#2c2420"/><rect x="38" y="41" width="22" height="16" rx="4" stroke="#3D2B1F" stroke-width="2.5" fill="none"/><rect x="60" y="41" width="22" height="16" rx="4" stroke="#3D2B1F" stroke-width="2.5" fill="none"/><line x1="60" y1="48" x2="60" y2="48" stroke="#3D2B1F" stroke-width="2.5"/><line x1="35" y1="48" x2="38" y2="48" stroke="#3D2B1F" stroke-width="2.5"/><line x1="82" y1="48" x2="85" y2="48" stroke="#3D2B1F" stroke-width="2.5"/><path d="M50 58C54 64 66 64 70 58" stroke="#2c2420" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M45 84L48 90l12 2 12-2 3-6z" fill="#c0392b" opacity=".7"/></svg></div>
-  <h1><span class="tag-red">Cơm</span> Bố Nấu</h1>
-    <p>Món ngon cho bố bận rộn</p>
+  <div class="header-bar" id="headerBar">
+    <div class="logo"><span class="tag-red">Cơm</span> Bố Nấu</div>
+    <div class="header-actions">
+      <button onclick="toggleSearch()" aria-label="Tìm món" id="searchToggle">🔍</button>
+      <span class="menu-wrap">
+        <button onclick="toggleMenu()" aria-label="Menu" id="menuToggle">⋮</button>
+        <div class="menu-dropdown" id="menuDropdown">
+          <button onclick="switchTab('suggest');closeMenu()">🍽️ Góp ý món</button>
+          <button onclick="switchTab('feature');closeMenu()">💡 Đề xuất</button>
+          <div class="menu-divider"></div>
+          <button onclick="switchTab('shoppingList');closeMenu()">🛒 Đi chợ</button>
+          <button onclick="genWeek();closeMenu()">📅 Thực đơn tuần</button>
+        </div>
+      </span>
+    </div>
+  </div>
+  <div class="search-overlay" id="searchOverlay">
+    <input id="searchInput" type="text" placeholder="Tìm món..." oninput="searchDishes(this.value)" autocomplete="off">
+    <button class="close-s" onclick="toggleSearch()">✕</button>
+  </div>
+  <select id="diffSelect" onchange="setDifficultyFilter(this.value)">
+    <option value="">Tất cả</option>
+    <option value="quick">Nhanh</option>
+    <option value="easy">Dễ</option>
+    <option value="medium">TB</option>
+    <option value="hard">Khó</option>
+  </select>
 </header>
-<div class="hero-actions">
-  <button class="btn btn-primary" onclick="genDay()">🎲 Thực đơn hôm nay</button>
-  <button class="btn btn-secondary" onclick="genWeek()">📅 Thực đơn cả tuần</button>
-</div>
-<div class="tabs">
-  <button class="tab-btn active" onclick="switchTab('menu')">Món ăn</button>
-  <button class="tab-btn" onclick="switchTab('suggest')">Góp ý</button>
-  <button class="tab-btn" onclick="switchTab('feature')">Đề xuất</button>
-  <button class="tab-btn" onclick="switchTab('shoppingList')">Đi chợ</button>
+<div class="filter-scroll" id="filterScroll">
+  <button class="hnag-pill" onclick="genDay()">🎲 Hôm nay ăn gì?</button>
+  <button class="chip active" data-key="" onclick="setFilter('')">Tất cả</button>
+  <button class="chip" data-key="man" onclick="setFilter('man')">🍖 Mặn</button>
+  <button class="chip" data-key="canh" onclick="setFilter('canh')">🥣 Canh</button>
+  <button class="chip" data-key="rau" onclick="setFilter('rau')">🥬 Rau</button>
+  <button class="chip" data-key="nhau" onclick="setFilter('nhau')">🍻 Nhậu</button>
+  <button class="chip" data-key="quick" onclick="setDiffFilter('quick')">⚡ Nhanh</button>
+  <button class="chip" data-key="easy" onclick="setDiffFilter('easy')">🌶️ Dễ</button>
+  <button class="chip" data-key="medium" onclick="setDiffFilter('medium')">🌶️🌶️ TB</button>
+  <button class="chip" data-key="hard" onclick="setDiffFilter('hard')">🌶️🌶️🌶️ Khó</button>
 </div>
 <div class="tab-content active" id="tab-menu">
-  <div class="filters" id="filters" data-active=""></div>
-  <div class="search-wrap">
-    <span class="search-icon">🔍</span>
-    <input class="search-input" id="searchInput" type="text" placeholder="Tìm món..." oninput="searchDishes(this.value)" autocomplete="off">
-    <select class="diff-select" id="diffSelect" onchange="setDifficultyFilter(this.value)">
-      <option value="">⏱️ Tất cả</option>
-      <option value="quick">⚡ Nhanh (&lt;45ph)</option>
-      <option value="easy">🌶️ Dễ</option>
-      <option value="medium">🌶️🌶️ TB</option>
-      <option value="hard">🌶️🌶️🌶️ Khó</option>
-    </select>
-  </div>
   <div class="results-area" id="results"></div>
 </div>
 <div class="tab-content" id="tab-suggest">
@@ -3632,7 +3648,7 @@ function searchDishes(query){
   clearTimeout(searchTimer);
   searchTimer=setTimeout(()=>{
     const q=query.toLowerCase().trim();searchQuery=q;
-    const activeFilter=document.querySelector('.filter-chip.active')?.dataset.key||'';
+    const activeFilter=document.querySelector('#filterScroll .chip.active')?.dataset.key||'';
     const diffFilter=document.getElementById('diffSelect')?.value||'';
     let pool=activeFilter?dishes.filter(d=>d.cat===activeFilter):dishes;
     
@@ -3723,15 +3739,17 @@ function resetForm(tabId){location.reload()}
 
 // ── Stats & Filters ──
 function initUI(){
-  const counts={man:0,canh:0,rau:0,nhau:0};dishes.forEach(d=>{if(d.cat==='man'||d.cat==='canh'||d.cat==='rau'||d.cat==='nhau')counts[d.cat]++});
-  
-  document.getElementById('filters').innerHTML=[{key:'',label:'Tất cả'},{key:'man',label:'🍖 Món mặn'},{key:'canh',label:'🥣 Món canh'},{key:'rau',label:'🥬 Món rau'},{key:'nhau',label:'🍻 Mồi bén'}].map(f=>`<button class="filter-chip${f.key===''?' active':''}" data-key="${f.key}" onclick="setFilter('${f.key}')">${f.label}</button>`).join('');
+  // Filter chips are now static HTML in .filter-scroll
+  // Just ensure default view is correct
+  showAll('');
 }
 let currentFilter='';
 function setDifficultyFilter(val){
   gtag('event', 'filter', {filter_type: 'difficulty', value: val});
   const sel=document.getElementById('diffSelect');
   if(sel)sel.value=val;
+  // Sync chip active state
+  document.querySelectorAll('#filterScroll .chip').forEach(c=>c.classList.toggle('active',c.dataset.key===('diff-'+val)));
   applyFilters();
 }
 function applyFilters(){
@@ -3751,10 +3769,24 @@ function applyFilters(){
   renderPage();
 }
 function setFilter(key){
+  gtag('event', 'filter', {filter_type: 'category', value: key});
   currentFilter=key;
-  document.querySelectorAll('.filter-chip').forEach(el=>el.classList.toggle('active',el.dataset.key===key));
+  document.querySelectorAll('#filterScroll .chip').forEach(el=>el.classList.toggle('active',el.dataset.key===key));
+  const sel=document.getElementById('diffSelect');
+  if(sel)sel.value='';
   applyFilters();
 }
+// ── Search overlay + hamburger menu ──
+function toggleSearch(){
+  const o=document.getElementById('searchOverlay'),h=document.getElementById('headerBar'),i=document.getElementById('searchInput');
+  o.classList.toggle('show');
+  if(o.classList.contains('show')){h.style.display='none';setTimeout(()=>i&&i.focus(),100)}
+  else{h.style.display='flex';if(i)i.value='';searchDishes('')}
+}
+function toggleMenu(){document.getElementById('menuDropdown').classList.toggle('show')}
+function closeMenu(){document.getElementById('menuDropdown').classList.remove('show')}
+// Click outside to close menu
+document.addEventListener('click',function(e){const m=document.getElementById('menuDropdown');if(m&&m.classList.contains('show')&&!e.target.closest('.menu-wrap'))m.classList.remove('show')});
 function shareRecipe(){
   if(!currentRecipe)return;
   const text=`🍽️ ${currentRecipe.name}\n${currentRecipe.desc}\n⏱️ ${currentRecipe.cook_time||'?'} | 🌶️ ${currentRecipe.difficulty||'?'}\n\nXem chi tiết tại: https://combonau.com`;
